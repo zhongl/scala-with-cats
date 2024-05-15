@@ -1,26 +1,28 @@
 ## Anatomy of a Type Class
 
 There are three important components to the type class pattern:
-the *type class* itself,
-*instances* for particular types,
-and the methods that *use* type classes.
+the type class itself, which defines an interface,
+type class instances, which implement the type class for particular types,
+and the methods that use type classes.
+The table below shows the language features that correspond to each component.
 
-Type classes in Scala are implemented using *implicit values* and *parameters*,
-and optionally using *implicit classes*.
-Scala language constructs correspond to the components of type classes as follows:
-
-- traits: type classes;
-- implicit values: type class instances;
-- implicit parameters: type class use; and
-- implicit classes: optional utilities that make type classes easier to use.
++---------------------+------------------+
+| Type Class Concept  | Language Feature |
++=====================+==================+
+| Type class          | trait            |
++---------------------+------------------+
+| Type class instance | given instance   |
++---------------------+------------------+
+| Type class use      | using clause     |
++---------------------+------------------+
 
 Let's see how this works in detail.
 
 
 ### The Type Class
 
-A *type class* is an interface or API
-that represents some functionality we want to implement.
+A type class is an interface or API
+that represents some functionality we want implemented.
 In Scala a type class is represented by a trait with at least one type parameter.
 For example, we can represent generic "serialize to JSON" behaviour
 as follows:
@@ -46,60 +48,65 @@ the type parameter `A` will be the concrete type of data we are writing.
 
 ### Type Class Instances
 
-The *instances* of a type class
+The instances of a type class
 provide implementations of the type class for specific types we care about,
 which can include types from the Scala standard library
 and types from our domain model.
 
-In Scala we define instances by creating
-concrete implementations of the type class
-and tagging them with the `implicit` keyword:
+In Scala we create type class instances by defining
+given instances implementing the type class.
 
 ```scala mdoc:silent
-final case class Person(name: String, email: String)
-
 object JsonWriterInstances {
-  implicit val stringWriter: JsonWriter[String] =
+  given stringWriter: JsonWriter[String] =
     new JsonWriter[String] {
       def write(value: String): Json =
         JsString(value)
     }
-
-  implicit val personWriter: JsonWriter[Person] =
-    new JsonWriter[Person] {
-      def write(value: Person): Json =
-        JsObject(Map(
-          "name" -> JsString(value.name),
-          "email" -> JsString(value.email)
-        ))
-    }
-
+  
+  final case class Person(name: String, email: String)
+  
+  given JsonWriter[Person] with
+    def write(value: Person): Json =
+      JsObject(Map(
+        "name" -> JsString(value.name),
+        "email" -> JsString(value.email)
+      ))
+  
   // etc...
 }
 ```
 
-These are known as implicit values.
+In this example we define two type class instances of `JsonWriter`, one for `String` and one for `Person`.
+The definition for `String` uses the syntax we saw in the previous section.
+The definition for `Person` uses two bits of syntax that are new in Scala 3.
+Firstly, writing `given JsonWriter[Person]` creates an anonymous given instance. 
+We declare just the type and don't need to name the instance.
+This is fine because we don't usually need to refer to given instances by name.
+The second bit of syntax is the use of `with` to implement a trait directly without having to 
+write out `new JsonWriter[Person]` and so on.
+Finally, I defined the type class instances within an object so we can control where they are in scope.
 
 
 ### Type Class Use
 
-A type class *use* is any functionality 
+A type class use is any functionality 
 that requires a type class instance to work.
 In Scala this means any method 
-that accepts instances of the type class as implicit parameters.
+that accepts instances of the type class as part of a using clause.
 
-Cats provides utilities that make type classes easier to use,
-and you will sometimes see these patterns in other libraries.
-There are two ways it does this: *Interface Objects* and *Interface Syntax*.
+We're going to look at two patterns of type class usage, 
+which we call **interface objects** and **interface syntax**.
+You'll find these in Cats and other libraries.
 
-**Interface Objects**
+#### Interface Objects
 
 The simplest way of creating an interface that uses a type class
 is to place methods in a singleton object:
 
 ```scala mdoc:silent
 object Json {
-  def toJson[A](value: A)(implicit w: JsonWriter[A]): Json =
+  def toJson[A](value: A)(using w: JsonWriter[A]): Json =
     w.write(value)
 }
 ```
@@ -108,7 +115,7 @@ To use this object, we import any type class instances we care about
 and call the relevant method:
 
 ```scala mdoc:silent
-import JsonWriterInstances._
+import JsonWriterInstances.*
 ```
 
 ```scala mdoc
@@ -116,28 +123,30 @@ Json.toJson(Person("Dave", "dave@example.com"))
 ```
 
 The compiler spots that we've called the `toJson` method
-without providing the implicit parameters.
-It tries to fix this by searching for type class instances
-of the relevant types and inserting them at the call site:
+without providing the given instances.
+It tries to fix this by searching for given instances
+of the relevant types and inserting them at the call site.
 
-```scala mdoc:silent
-Json.toJson(Person("Dave", "dave@example.com"))(personWriter)
-```
 
-**Interface Syntax**
+#### Interface Syntax
 
-We can alternatively use *extension methods* to
+We can alternatively use ***extension methods** to
 extend existing types with interface methods[^pimping].
-Cats refers to this as *"syntax"* for the type class:
+This is sometimes referred to as as **"syntax"** for the type class, 
+which is the term used by Cats.
+Scala 2 has an equivalent for extension methods kwown as **implicit classes**.
 
 [^pimping]: You may occasionally see extension methods
 referred to as "type enrichment" or "pimping".
 These are older terms that we don't use anymore.
 
+Here's an example defining an extension method that adds a `toJson` method to
+any type for which we have a `JsonWriter` instance.
+
 ```scala mdoc:silent
 object JsonSyntax {
-  implicit class JsonWriterOps[A](value: A) {
-    def toJson(implicit w: JsonWriter[A]): Json =
+  extension [A](value: A) {
+    def toJson(using w: JsonWriter[A]): Json =
       w.write(value)
   }
 }
@@ -147,39 +156,83 @@ We use interface syntax by importing it
 alongside the instances for the types we need:
 
 ```scala mdoc:silent
-import JsonWriterInstances._
-import JsonSyntax._
+import JsonWriterInstances.*
+import JsonSyntax.*
 ```
 
 ```scala mdoc
 Person("Dave", "dave@example.com").toJson
 ```
 
-Again, the compiler searches for candidates
-for the implicit parameters and fills them in for us:
+In Scala 3 we can define extension methods directly on a type class trait.
+Since we're defining `toJson` as just calling `write` on `JsonWriter`,
+we can instead define `toJson` directly on `JsonWriter` and avoid creating an separate extension method.
+(If you're wondering why we did not do this originally, we didn't want to introduce too many concepts at once.) 
 
-```scala mdoc:silent
-Person("Dave", "dave@example.com").toJson(personWriter)
+```scala mdoc:invisible:reset-object
+// Define a very simple JSON AST
+sealed trait Json
+final case class JsObject(get: Map[String, Json]) extends Json
+final case class JsString(get: String) extends Json
+final case class JsNumber(get: Double) extends Json
+case object JsNull extends Json
 ```
 
-**The *implicitly* Method**
+```scala mdoc:silent
+trait JsonWriter[A] {
+  extension (value: A) def toJson: Json
+}
+```
+
+```scala mdoc:invisible
+object JsonWriterInstances {
+  given stringWriter: JsonWriter[String] =
+    new JsonWriter[String] {
+      extension (value: String) 
+        def toJson: Json = JsString(value)
+    }
+  
+  final case class Person(name: String, email: String)
+  
+  given JsonWriter[Person] with
+    extension (value: Person) 
+      def toJson: Json =
+        JsObject(Map(
+          "name" -> JsString(value.name),
+          "email" -> JsString(value.email)
+        ))
+  
+  // etc...
+}
+```
+
+Now any type that has a `JsonWriter` method automatically gets a `toJson` extension.
+
+```scala mdoc
+import JsonWriterInstances.{*, given}
+
+Person("Dave", "dave@example.com").toJson
+```
+
+
+#### The `summon` Method
 
 The Scala standard library provides
-a generic type class interface called `implicitly`.
+a generic type class interface called `summon`.
 Its definition is very simple:
 
 ```scala
-def implicitly[A](implicit value: A): A =
+def summon[A](using value: A): A =
   value
 ```
 
-We can use `implicitly` to summon any value from implicit scope.
-We provide the type we want and `implicitly` does the rest:
+We can use `summon` to summon any value in the given scope.
+We provide the type we want and `summon` does the rest:
 
 ```scala mdoc
-import JsonWriterInstances._
+import JsonWriterInstances.given
 
-implicitly[JsonWriter[String]]
+summon[JsonWriter[String]]
 ```
 
 Most type classes in Cats provide other means to summon instances.

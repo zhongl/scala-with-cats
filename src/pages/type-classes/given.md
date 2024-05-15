@@ -92,4 +92,131 @@ double
 // given instance ohNo match type Int of parameter x of method add
 ```
 
+
+### Given Scope and Imports
+
+Given instances are usually not explicitly passed to using clauses.
+To ensure our code can be understood, we need to be very clear about which given instances are candidates to be supplied to a using clauses.
+The **given scope** is all the places that the compiler will look for given instances.
+
+The first rule we should know about the given scope is that it starts at the **call site**, where the method with a using clause is called, not at **definition site** where the method is defined.
+This means the following code does not compile, because the given instance is not in scope at the call site, even though it is in scope at the definition site.
+
+```scala mdoc:reset:fail
+object A {
+  given a: Int = 1
+  def whichInt(using int: Int): Int = int
+}
+
+A.whichInt
+```
+
+The second rule, which we have been relying on in all our examples so far, is that the given scope includes the **lexical scope** at the call site.
+This is the scope where values are usually found.
+This means the following code works, as `a` is defined in a scope that includes the call site.
+
+```scala mdoc:silent
+object A {
+  given a: Int = 1
+  
+  object B {
+    C.whichInt 
+  }
+  
+  object C {
+    def whichInt(using int: Int): Int = int
+  }
+}
+```
+
+However, if there are multiple given instances in the same scope the compiler will not arbitrarily choose one.
+Instead it fails with an error telling us the choice is ambiguous.
+
+```scala
+object A {
+  given a: Int = 1
+  given b: Int = 2
+    
+  def whichInt(using int: Int): Int = int
+    
+  whichInt
+}
+// error:
+// Ambiguous given instances: both given instance a in object A and
+// given instance b in object A match type Int of parameter int of 
+// method whichInt in object A
+```
+
+We can import given instances from other scopes, just like we can import normal values, but we must explicitly import given values. The following code does not work because we have not explicitly imported the given instances.
+
+```scala mdoc:reset:fail
+object A {
+  given a: Int = 1
+
+  def whichInt(using int: Int): Int = int
+}
+object B {
+  import A.*
+    
+  whichInt
+}
+```
+
+It works when we do explicitly import them.
+
+```scala mdoc:reset:silent
+object A {
+  given a: Int = 1
+
+  def whichInt(using int: Int): Int = int
+}
+object B {
+  import A.{given, *}
+    
+  whichInt
+}
+```
+
+One final wrinkle. The given scope includes the companion objects of any type involved in the type of the using clause. 
+This is best illustrated with an example.
+We'll start by defining a type `Sound` that represents the sound made by its type variable `A`, and a method `soundOf` to access that sound.
+
+```scala mdoc:reset
+trait Sound[A] {
+  def sound: String
+}
+
+def soundOf[A](using s: Sound[A]): String =
+  s.sound
+```
+
+Now we'll define some given instances. Notice that they are defined on the relevant companion objects.
+
+```scala mdoc:silent
+trait Cat
+object Cat {
+  given catSound: Sound[Cat] =
+    new Sound[Cat]{
+      def sound: String = "meow"
+    }
+}
+
+trait Dog
+object Dog {
+  given dogSound: Sound[Dog] = 
+    new Sound[Dog]{
+      def sound: String = "woof"
+    }
+}
+```
+
+When we call `soundOf` we don't have to bring the instances into scope. They are automatically in the given scope by virtue of being defined on the companion objects of the types we use (`Cat` and `Dog`). If we had defined these instances on the `Sound` companion object they would also be in the given scope.
+
+```scala mdoc
+soundOf[Cat]
+soundOf[Dog]
+```
+
+We should almost always be defining given instances on companion objects. This simple organization scheme means that users do not have to explicitly import them but can easily find them if they wish to inspect the implementation.
+
 There are a few more details to given instances. However we'll now turn to type classes, which will give us the opportunity to introduce these additional features in a context where they are useful.
