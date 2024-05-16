@@ -1,6 +1,7 @@
 ## Anatomy of a Type Class
 
-There are three important components to the type class pattern:
+Let's now look at how type classes are implemented.
+There are three important components to a type class:
 the type class itself, which defines an interface,
 type class instances, which implement the type class for particular types,
 and the methods that use type classes.
@@ -46,6 +47,7 @@ with `Json` and its subtypes providing supporting code.
 When we come to implement instances of `JsonWriter`,
 the type parameter `A` will be the concrete type of data we are writing.
 
+
 ### Type Class Instances
 
 The instances of a type class
@@ -85,7 +87,9 @@ We declare just the type and don't need to name the instance.
 This is fine because we don't usually need to refer to given instances by name.
 The second bit of syntax is the use of `with` to implement a trait directly without having to 
 write out `new JsonWriter[Person]` and so on.
-Finally, I defined the type class instances within an object so we can control where they are in scope.
+Finally, in a real implementation we'd usually want to define the instances on a companion object: the instance for `String` on the `JsonWriter` companion object (because we cannot define it on the `String` companion object) and the instance for `Person` on the `Person` companion object. 
+I haven't done this here because I would need to redeclare `JsonWriter`, as a type and it's companion object must be declared at the same time.
+
 
 
 ### Type Class Use
@@ -115,7 +119,7 @@ To use this object, we import any type class instances we care about
 and call the relevant method:
 
 ```scala mdoc:silent
-import JsonWriterInstances.*
+import JsonWriterInstances.{*, given}
 ```
 
 ```scala mdoc
@@ -156,7 +160,7 @@ We use interface syntax by importing it
 alongside the instances for the types we need:
 
 ```scala mdoc:silent
-import JsonWriterInstances.*
+import JsonWriterInstances.given
 import JsonSyntax.*
 ```
 
@@ -236,7 +240,7 @@ summon[JsonWriter[String]]
 ```
 
 Most type classes in Cats provide other means to summon instances.
-However, `implicitly` is a good fallback for debugging purposes.
-We can insert a call to `implicitly` within the general flow of our code
+However, `summon` is a good fallback for debugging purposes.
+We can insert a call to `summon` within the general flow of our code
 to ensure the compiler can find an instance of a type class
-and ensure that there are no ambiguous implicit errors.
+and ensure that there are no ambiguity errors.

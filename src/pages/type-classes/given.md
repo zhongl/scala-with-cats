@@ -219,4 +219,67 @@ soundOf[Dog]
 
 We should almost always be defining given instances on companion objects. This simple organization scheme means that users do not have to explicitly import them but can easily find them if they wish to inspect the implementation.
 
+
+#### Given Instance Priority
+
+Notice that given instance selection is based entirely on types. We don't even pass any values to `soundOf`! This means given instances are easiest to use when there is only one instance for each type. In this case we can just put the instances on a relevant companion object and everything works out.
+
+However, this is not always possible (though it's often an indication of a bad design if it is not). For cases where we need multiple instances for a given type we can use the instance priority rules to select between them. We'll look at the three most important rules below.
+
+The first rule is that explicitly passing an instance takes priority over everything else.
+
+```scala mdoc:reset:silent
+given a: Int = 1
+def whichInt(using int: Int): Int = int
+```
+```scala mdoc
+whichInt(using 2)
+```
+   
+The second rule is that instances in the lexical scope take priority over instances in a companion object
+
+```scala mdoc:reset:silent
+trait Sound[A] {
+  def sound: String
+}
+trait Cat
+object Cat {
+  given catSound: Sound[Cat] =
+    new Sound[Cat]{
+      def sound: String = "meow"
+    }
+}
+
+def soundOf[A](using s: Sound[A]): String =
+  s.sound
+```
+```scala mdoc
+given purr: Sound[Cat]  =
+  new Sound[Cat]{
+    def sound: String = "purr"
+  }
+
+soundOf[Cat]
+```
+   
+The final rule is that instances in a closer lexical scope take preference over those further away.
+
+```scala mdoc
+{
+  given growl: Sound[Cat] =
+   new Sound[Cat]{
+     def sound: String = "growl"
+   }
+   
+  {
+    given mew: Sound[Cat] =
+     new Sound[Cat]{
+       def sound: String = "mew"
+     }
+     
+    soundOf[Cat]
+  }
+}
+```
+   
 There are a few more details to given instances. However we'll now turn to type classes, which will give us the opportunity to introduce these additional features in a context where they are useful.
