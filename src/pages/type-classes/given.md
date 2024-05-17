@@ -2,7 +2,7 @@
 
 In section we'll go through Scala's language features that implement contextual abstraction. Once we have a firm understanding of the mechanics of contextual abstraction, we'll move on to their use.
 
-The language features for contextual abstraction have changed from Scala 2 to Scala 3. In the table below I show the Scala 3 and the Scala 2 equivalents of the main features.
+The language features for contextual abstraction have changed their names from Scala 2 to Scala 3. In the table below I show the Scala 3 features, and their Scala 2 equivalents. If you use Scala 2 you'll find that you can largely translate the code to Scala 2 just by changing the names as appropriate.
 
 +------------------+---------------------+
 | Scala 3          | Scala 2             |
@@ -12,7 +12,7 @@ The language features for contextual abstraction have changed from Scala 2 to Sc
 | using clause     | implicit parameter  |
 +------------------+---------------------+
 
-Let's now explain how they work.
+Let's now explain how these language features work.
 
 
 ### Using Clauses
@@ -61,45 +61,29 @@ We can use a given instance like a normal value.
 theMagicNumber * 2
 ```
 
-However, it's more common to use them with a using clause. When we call a method that has a using clause, and we do not explicitly supply values for the parameters in the using clause, the compiler will look for given instances of the required type.
+However, it's more common to use them with a using clause. When we call a method that has a using clause, and we do not explicitly supply values for the parameters in the using clause, the compiler will look for given instances of the required type. If it finds a given instance it will automatically use it to complete the method call.
 
-For example, we defined `double` above with a using clause with an `Int` parameter. The given instance we just defined, `theMagicNumber`, also have type `Int`. So if we call `double` without providing any values for the using clause the compiler will use the value `theMagicNumber` for us.
+For example, we defined `double` above with a using clause with an `Int` parameter. The given instance we just defined, `theMagicNumber`, also has type `Int`. So if we call `double` without providing any values for the using clause the compiler will provide the value `theMagicNumber` for us.
 
 ```scala mdoc
 double
 ```
 
-The same value will be used if there are multiple parameters in a using clause with the same type, as in `add` defined above.
+The same given instance will be used for multiple parameters in a using clause with the same type, as in `add` defined above.
 
 ```scala mdoc
 add
-```
-
-However, if we define multiple given instances of the same type we get an error. The compiler will not arbitrarily choose one for us.
-
-```scala mdoc:reset:invisible
-def double(using x: Int) = x + x
-given theMagicNumber: Int = 3
-```
-
-```scala mdoc:silent
-given ohNo: Int = 4
-```
-
-```scala
-double
-// Ambiguous given instances: both given instance theMagicNumber and
-// given instance ohNo match type Int of parameter x of method add
 ```
 
 
 ### Given Scope and Imports
 
 Given instances are usually not explicitly passed to using clauses.
+Their whole reason for existence is to get the compiler to do some work for us.
 To ensure our code can be understood, we need to be very clear about which given instances are candidates to be supplied to a using clauses.
 The **given scope** is all the places that the compiler will look for given instances.
 
-The first rule we should know about the given scope is that it starts at the **call site**, where the method with a using clause is called, not at **definition site** where the method is defined.
+The first rule we should know about the given scope is that it starts at the **call site**, where the method with a using clause is called, not at the **definition site** where the method is defined.
 This means the following code does not compile, because the given instance is not in scope at the call site, even though it is in scope at the definition site.
 
 ```scala mdoc:reset:fail
@@ -147,7 +131,7 @@ object A {
 // method whichInt in object A
 ```
 
-We can import given instances from other scopes, just like we can import normal values, but we must explicitly import given values. The following code does not work because we have not explicitly imported the given instances.
+We can import given instances from other scopes, just like we can import normal values, but we must explicitly say we want to import given instances. The following code does not work because we have not explicitly imported the given instances.
 
 ```scala mdoc:reset:fail
 object A {
@@ -162,7 +146,7 @@ object B {
 }
 ```
 
-It works when we do explicitly import them.
+It works when we do explicitly import them using `import A.given`.
 
 ```scala mdoc:reset:silent
 object A {
@@ -224,7 +208,7 @@ We should almost always be defining given instances on companion objects. This s
 
 Notice that given instance selection is based entirely on types. We don't even pass any values to `soundOf`! This means given instances are easiest to use when there is only one instance for each type. In this case we can just put the instances on a relevant companion object and everything works out.
 
-However, this is not always possible (though it's often an indication of a bad design if it is not). For cases where we need multiple instances for a given type we can use the instance priority rules to select between them. We'll look at the three most important rules below.
+However, this is not always possible (though it's often an indication of a bad design if it is not). For cases where we need multiple instances for a type, we can use the instance priority rules to select between them. We'll look at the three most important rules below.
 
 The first rule is that explicitly passing an instance takes priority over everything else.
 
@@ -282,4 +266,11 @@ The final rule is that instances in a closer lexical scope take preference over 
 }
 ```
    
-There are a few more details to given instances. However we'll now turn to type classes, which will give us the opportunity to introduce these additional features in a context where they are useful.
+There are a few more details to given instances. 
+
+
+### The Role of Contextual Abstraction
+
+
+
+However we'll now turn to type classes, which will give us the opportunity to introduce these additional features in a context where they are useful.
