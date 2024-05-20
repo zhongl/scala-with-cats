@@ -87,7 +87,9 @@ We declare just the type and don't need to name the instance.
 This is fine because we don't usually need to refer to given instances by name.
 The second bit of syntax is the use of `with` to implement a trait directly without having to 
 write out `new JsonWriter[Person]` and so on.
-Finally, in a real implementation we'd usually want to define the instances on a companion object: the instance for `String` on the `JsonWriter` companion object (because we cannot define it on the `String` companion object) and the instance for `Person` on the `Person` companion object. 
+
+
+In a real implementation we'd usually want to define the instances on a companion object: the instance for `String` on the `JsonWriter` companion object (because we cannot define it on the `String` companion object) and the instance for `Person` on the `Person` companion object. 
 I haven't done this here because I would need to redeclare `JsonWriter`, as a type and it's companion object must be declared at the same time.
 
 
