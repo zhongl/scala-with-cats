@@ -136,11 +136,11 @@ of the relevant types and inserting them at the call site.
 
 #### Interface Syntax
 
-We can alternatively use ***extension methods** to
+We can alternatively use **extension methods** to
 extend existing types with interface methods[^pimping].
-This is sometimes referred to as as **"syntax"** for the type class, 
+This is sometimes referred to as as **syntax** for the type class, 
 which is the term used by Cats.
-Scala 2 has an equivalent for extension methods kwown as **implicit classes**.
+Scala 2 has an equivalent to extension methods known as **implicit classes**.
 
 [^pimping]: You may occasionally see extension methods
 referred to as "type enrichment" or "pimping".
