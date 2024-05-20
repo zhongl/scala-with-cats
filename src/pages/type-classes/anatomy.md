@@ -146,7 +146,7 @@ Scala 2 has an equivalent to extension methods known as **implicit classes**.
 referred to as "type enrichment" or "pimping".
 These are older terms that we don't use anymore.
 
-Here's an example defining an extension method that adds a `toJson` method to
+Here's an example defining an extension method to add a `toJson` method to
 any type for which we have a `JsonWriter` instance.
 
 ```scala mdoc:silent
