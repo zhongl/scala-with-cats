@@ -17,13 +17,13 @@ Let's now explain how these language features work.
 
 ### Using Clauses
 
-We'll start with **using clauses**. A using clause is a method parameter list that starts with the `using` keyword.
+We'll start with **using clauses**. A using clause is a method parameter list that starts with the `using` keyword. We use the term **context parameters** for the parameters in a using clause.
 
 ```scala mdoc:silent
 def double(using x: Int) = x + x
 ```
 
-The `using` keyword applies to all parameters in the list, so in `add` below both `x` and `y` are in the using clause.
+The `using` keyword applies to all parameters in the list, so in `add` below both `x` and `y` are context parameters.
 
 ```scala mdoc:silent
 def add(using x: Int, y: Int) = x + y
@@ -61,9 +61,9 @@ We can use a given instance like a normal value.
 theMagicNumber * 2
 ```
 
-However, it's more common to use them with a using clause. When we call a method that has a using clause, and we do not explicitly supply values for the parameters in the using clause, the compiler will look for given instances of the required type. If it finds a given instance it will automatically use it to complete the method call.
+However, it's more common to use them with a using clause. When we call a method that has a using clause, and we do not explicitly supply values for the context parameters, the compiler will look for given instances of the required type. If it finds a given instance it will automatically use it to complete the method call.
 
-For example, we defined `double` above with a using clause with an `Int` parameter. The given instance we just defined, `theMagicNumber`, also has type `Int`. So if we call `double` without providing any values for the using clause the compiler will provide the value `theMagicNumber` for us.
+For example, we defined `double` above with a single `Int` context parameter. The given instance we just defined, `theMagicNumber`, also has type `Int`. So if we call `double` without providing any value for the context parameter the compiler will provide the value `theMagicNumber` for us.
 
 ```scala mdoc
 double
