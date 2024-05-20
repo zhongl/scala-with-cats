@@ -1,8 +1,8 @@
 ## The Mechanics of Contextual Abstraction
 
-In section we'll go through Scala's language features that implement contextual abstraction. Once we have a firm understanding of the mechanics of contextual abstraction, we'll move on to their use.
+In section we'll go through the main Scala language features for contextual abstraction. Once we have a firm understanding of the mechanics of contextual abstraction we'll move on to their use.
 
-The language features for contextual abstraction have changed their names from Scala 2 to Scala 3. In the table below I show the Scala 3 features, and their Scala 2 equivalents. If you use Scala 2 you'll find that you can largely translate the code to Scala 2 just by changing the names as appropriate.
+The language features for contextual abstraction have changed name from Scala 2 to Scala 3, but they work in largely the same way. In the table below I show the Scala 3 features, and their Scala 2 equivalents. If you use Scala 2 you'll find that most of the code works simply by replacing `given` with `implicit val` and `using` with `implicit`.
 
 +------------------+---------------------+
 | Scala 3          | Scala 2             |
@@ -44,7 +44,7 @@ add(using 1, 2)
 addAll(1)(using 2)(using 3)
 ```
 
-However this is not the typical way to pass parameters. We usually use given instances instead, so let's turn to them.
+However this is not the typical way to pass parameters. In fact we don't usually explicit pass parameters to using clause at all. We usually use given instances instead, so let's turn to them.
 
 
 ### Given Instances
@@ -75,13 +75,15 @@ The same given instance will be used for multiple parameters in a using clause w
 add
 ```
 
+The above are the most important points for using clauses and given instances. We'll now turn to some of the details of their semantics.
+
 
 ### Given Scope and Imports
 
 Given instances are usually not explicitly passed to using clauses.
-Their whole reason for existence is to get the compiler to do some work for us.
-To ensure our code can be understood, we need to be very clear about which given instances are candidates to be supplied to a using clauses.
-The **given scope** is all the places that the compiler will look for given instances.
+Their whole reason for existence is to get the compiler to do this for us.
+This could make code hard to understand, so we need to be very clear about which given instances are candidates to be supplied to a using clause.
+In this section we'll look at the **given scope**, which is all the places that the compiler will look for given instances, and the special syntax for importing given instances.
 
 The first rule we should know about the given scope is that it starts at the **call site**, where the method with a using clause is called, not at the **definition site** where the method is defined.
 This means the following code does not compile, because the given instance is not in scope at the call site, even though it is in scope at the definition site.
@@ -96,7 +98,7 @@ A.whichInt
 ```
 
 The second rule, which we have been relying on in all our examples so far, is that the given scope includes the **lexical scope** at the call site.
-This is the scope where values are usually found.
+The lexical scope is where we usually look up the values associated with names (like the names of method parameters or `val` declarations).
 This means the following code works, as `a` is defined in a scope that includes the call site.
 
 ```scala mdoc:silent
@@ -131,7 +133,7 @@ object A {
 // method whichInt in object A
 ```
 
-We can import given instances from other scopes, just like we can import normal values, but we must explicitly say we want to import given instances. The following code does not work because we have not explicitly imported the given instances.
+We can import given instances from other scopes, just like we can import normal declarations, but we must explicitly say we want to import given instances. The following code does not work because we have not explicitly imported the given instances.
 
 ```scala mdoc:reset:fail
 object A {
@@ -161,7 +163,7 @@ object B {
 }
 ```
 
-One final wrinkle. The given scope includes the companion objects of any type involved in the type of the using clause. 
+One final wrinkle: the given scope includes the companion objects of any type involved in the type of the using clause. 
 This is best illustrated with an example.
 We'll start by defining a type `Sound` that represents the sound made by its type variable `A`, and a method `soundOf` to access that sound.
 
@@ -194,14 +196,14 @@ object Dog {
 }
 ```
 
-When we call `soundOf` we don't have to bring the instances into scope. They are automatically in the given scope by virtue of being defined on the companion objects of the types we use (`Cat` and `Dog`). If we had defined these instances on the `Sound` companion object they would also be in the given scope.
+When we call `soundOf` we don't have to explicitly bring the instances into scope. They are automatically in the given scope by virtue of being defined on the companion objects of the types we use (`Cat` and `Dog`). If we had defined these instances on the `Sound` companion object they would also be in the given scope; when looking for a `Sound[A]` both the companion objects of `Sound` and `A` are in scope.
 
 ```scala mdoc
 soundOf[Cat]
 soundOf[Dog]
 ```
 
-We should almost always be defining given instances on companion objects. This simple organization scheme means that users do not have to explicitly import them but can easily find them if they wish to inspect the implementation.
+We should almost always be defining given instances on companion objects. This simple organization scheme means that users do not have to explicitly import them but can easily find the implementations if they wish to inspect them.
 
 
 #### Given Instance Priority
@@ -266,11 +268,4 @@ The final rule is that instances in a closer lexical scope take preference over 
 }
 ```
    
-There are a few more details to given instances. 
-
-
-### The Role of Contextual Abstraction
-
-
-
-However we'll now turn to type classes, which will give us the opportunity to introduce these additional features in a context where they are useful.
+We're now seen most of the details of how given instances and using clauses work. This is a craft level explanation, and it naturally leads to the question: where would use these tools? This is what we'll address next, where we look at type classes and their implementation in Scala.
