@@ -210,7 +210,7 @@ and consequently does not find the extension method on the instance in the `Json
 "A string".toJson
 ```
 
-This means that users will have to explicitly import at least the instances for the built-in types (which we cannot modify).
+This means that users will have to explicitly import at least the instances for the built-in types (for which we cannot modify the companion objects).
 
 ```scala mdoc
 import JsonWriter.given
