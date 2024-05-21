@@ -131,7 +131,7 @@ lazy val pages = List(
   "adt-optimization/conclusions.md",
   // Part 4: Craft
   // Part 5: Case Studies
-  "parts/part2.md",
+  "parts/part4.md",
   "case-studies/testing/index.md",
   "case-studies/map-reduce/index.md",
   "case-studies/validation/index.md",
