@@ -134,7 +134,7 @@ format(true)
 Now define an instance of `Printable` for
 the following `Box` case class.
 You'll need to write this as an `implicit def`
-as described in Section [@sec:type-classes:recursive-implicits]:
+as described in Section [@sec:type-classes:composition]:
 
 ```scala mdoc:silent
 final case class Box[A](value: A)

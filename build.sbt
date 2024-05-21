@@ -4,7 +4,7 @@ ThisBuild / name := "scala-with-cats"
 ThisBuild / organization := "com.scalawithcats"
 ThisBuild / version := "0.0.1"
 
-ThisBuild / scalaVersion := "3.3.1"
+ThisBuild / scalaVersion := "3.3.3"
 
 ThisBuild / useSuperShell := false
 Global / onChangedBuildSource := ReloadOnSourceChanges
@@ -67,7 +67,7 @@ lazy val pages = List(
   "type-classes/given.md",
   "type-classes/anatomy.md",
   "type-classes/composition.md",
-  "type-classes/printable.md",
+  "type-classes/display.md",
   "type-classes/cats.md",
   "type-classes/equal.md",
   "type-classes/instance-selection.md",

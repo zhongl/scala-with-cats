@@ -170,10 +170,12 @@ import JsonSyntax.*
 Person("Dave", "dave@example.com").toJson
 ```
 
+<div class="callout callout-info">
+#### Extension Methods on Traits
+
 In Scala 3 we can define extension methods directly on a type class trait.
 Since we're defining `toJson` as just calling `write` on `JsonWriter`,
-we can instead define `toJson` directly on `JsonWriter` and avoid creating an separate extension method.
-(If you're wondering why we did not do this originally, we didn't want to introduce too many concepts at once.) 
+we could instead define `toJson` directly on `JsonWriter` and avoid creating an separate extension method.
 
 ```scala mdoc:invisible:reset-object
 // Define a very simple JSON AST
@@ -188,38 +190,37 @@ case object JsNull extends Json
 trait JsonWriter[A] {
   extension (value: A) def toJson: Json
 }
-```
 
-```scala mdoc:invisible
-object JsonWriterInstances {
+object JsonWriter {
   given stringWriter: JsonWriter[String] =
     new JsonWriter[String] {
       extension (value: String) 
         def toJson: Json = JsString(value)
     }
   
-  final case class Person(name: String, email: String)
-  
-  given JsonWriter[Person] with
-    extension (value: Person) 
-      def toJson: Json =
-        JsObject(Map(
-          "name" -> JsString(value.name),
-          "email" -> JsString(value.email)
-        ))
-  
   // etc...
 }
 ```
 
-Now any type that has a `JsonWriter` method automatically gets a `toJson` extension.
+We do *not* advocate this approach, because of a limitation in how Scala searches for extension methods.
+The following code fails because Scala only looks within the `String` companion object for extension methods,
+and consequently does not find the extension method on the instance in the `JsonWriter` companion object.
 
-```scala mdoc
-import JsonWriterInstances.{*, given}
-
-Person("Dave", "dave@example.com").toJson
+```scala mdoc:fail
+"A string".toJson
 ```
 
+This means that users will have to explicitly import at least the instances for the built-in types (which we cannot modify).
+
+```scala mdoc
+import JsonWriter.given
+
+"A string".toJson
+```
+
+For consistency we recommend separating the syntax from the type class instances and always explicitly importing it,
+rather than requiring explicit imports for only some extension methods.
+</div>
 
 #### The `summon` Method
 
@@ -236,8 +237,6 @@ We can use `summon` to summon any value in the given scope.
 We provide the type we want and `summon` does the rest:
 
 ```scala mdoc
-import JsonWriterInstances.given
-
 summon[JsonWriter[String]]
 ```
 
