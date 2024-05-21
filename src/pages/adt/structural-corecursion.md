@@ -8,7 +8,7 @@ we can use structural corecursion whenever the output of a method or function is
 
 
 <div class="callout callout-info">
-#### Duality in Functional Programming
+#### Duality in Functional Programming {-}
 
 Two concepts or structures are duals if one can be translated in a one-to-one fashion to the other.
 Duality is one of the main themes of this book.

@@ -171,7 +171,7 @@ Person("Dave", "dave@example.com").toJson
 ```
 
 <div class="callout callout-info">
-#### Extension Methods on Traits
+#### Extension Methods on Traits {-}
 
 In Scala 3 we can define extension methods directly on a type class trait.
 Since we're defining `toJson` as just calling `write` on `JsonWriter`,
