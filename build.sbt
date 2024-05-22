@@ -68,8 +68,6 @@ lazy val pages = List(
   "type-classes/anatomy.md",
   "type-classes/composition.md",
   "type-classes/display.md",
-  "type-classes/cats.md",
-  "type-classes/equal.md",
   "type-classes/instance-selection.md",
   "type-classes/summary.md",
   // Interpreters
@@ -80,6 +78,9 @@ lazy val pages = List(
   "adt-interpreters/conclusions.md",
   // Part 2: Type Classes
   "parts/part2.md",
+  // Cats
+  "cats/index.md",
+  "cats/equal.md",
   // Monoid
   "monoids/index.md",
   "monoids/cats.md",

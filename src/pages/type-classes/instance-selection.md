@@ -1,46 +1,59 @@
-## Controlling Instance Selection
+## Type Classes and Variance
 
-When working with type classes
-we must consider two issues
-that control instance selection:
+In this section we'll discuss how variance interacts
+with type class instance selection
+Variance is one of the darker corners of Scala's type system,
+so we start by reviewing how it works.
+We then move on to its interaction with type classes.
 
- -  What is the relationship between
-    an instance defined on a type and its subtypes?
-
-    For example, if we define a `JsonWriter[Option[Int]]`,
-    will the expression `Json.toJson(Some(1))` select this instance?
-    (Remember that `Some` is a subtype of `Option`).
-
- -  How do we choose between type class instances
-    when there are many available?
-
-    What if we define two `JsonWriters` for `Person`?
-    When we write `Json.toJson(aPerson)`,
-    which instance is selected?
 
 ### Variance {#sec:variance}
 
-When we define type classes we can
-add variance annotations to the type parameter
-to affect the variance of the type class
-and the compiler's ability to select instances
-during implicit resolution.
+Variance concerns the relationship between 
+an instance defined on a type and its subtypes.
+For example, if we define a `JsonWriter[Option[Int]]`,
+will the expression `Json.toJson(Some(1))` select this instance?
+(Remember that `Some` is a subtype of `Option`).
 
-To recap Essential Scala,
-variance relates to subtypes.
+We need two concepts to explain variance: 
+type constructors; and subtyping.
+
+Variance applies to any **type constructor**,
+which is the `F` in a type `F[A]`.
+So, for example, `List`, `Option`, and `JsonWriter` are all type constructors.
+A type constructor must have at least one type parameter,
+and may have more.
+So `Either`, with two type parameters, is also a type constructor.
+
+Subtyping is a relationship between types.
 We say that `B` is a subtype of `A`
 if we can use a value of type `B`
 anywhere we expect a value of type `A`.
+This is written `B <: A`.
 
-Co- and contravariance annotations arise
-when working with type constructors.
+Variance concerns the subtyping relationship between types `F[A]` and `F[B]`,
+given a subtyping relationship between `A` and `B`.
+If `B` is a subtype of `A` then
+
+1. if `F[B] <: F[A]` we say `F` is **covariant** in `A`; else
+2. if `F[B] >: F[A]` we say `F` is **contravariant** in `A`; else
+3. if there is no subtyping relationship between `F[B]` and `F[A]` we say `F` is **invariant** in `A`.
+
+
+Invariance is the default.
+When we define a type constructor we can
+add variance annotations to the type parameter
+to chose co- or contra-variance.
 For example, we denote covariance with a `+` symbol:
 
 ```scala
 trait F[+A] // the "+" means "covariant"
 ```
 
-**Covariance**
+Let's now look at these in more detail.
+
+
+### Covariance
 
 Covariance means that the type `F[B]`
 is a subtype of the type `F[A]` if `B` is a subtype of `A`.
@@ -60,7 +73,7 @@ anywhere we expect a `List[Shape]` because
 
 ```scala mdoc:silent
 sealed trait Shape
-case class Circle(radius: Double) extends Shape
+final case class Circle(radius: Double) extends Shape
 ```
 
 ```scala
@@ -78,7 +91,7 @@ data that we can later get out of a container type such as `List`,
 or otherwise returned by some method.
 
 
-**Contravariance**
+### Contravariance
 
 What about contravariance?
 We write contravariant type constructors
@@ -145,7 +158,7 @@ This means we can use `shapeWriter`
 anywhere we expect to see a `JsonWriter[Circle]`.
 
 
-**Invariance**
+### Invariance
 
 Invariance is the easiest situation to describe.
 It's what we get when we don't write a `+` or `-`
@@ -160,7 +173,10 @@ are never subtypes of one another,
 no matter what the relationship between `A` and `B`.
 This is the default semantics for Scala type constructors.
 
-When the compiler searches for an implicit
+
+### Variance and Instance Selection
+
+When the compiler searches for a given instnace
 it looks for one matching the type *or subtype*.
 Thus we can use variance annotations
 to control type class instance selection to some extent.
@@ -168,10 +184,11 @@ to control type class instance selection to some extent.
 There are two issues that tend to arise.
 Let's imagine we have an algebraic data type like:
 
-```scala
-sealed trait A
-final case object B extends A
-final case object C extends A
+```scala mdoc:silent
+enum A {
+  case B
+  case C
+}
 ```
 
 The issues are:
@@ -197,6 +214,92 @@ Supertype instance used?        No          No          Yes
 
 More specific type preferred?   No          Yes         No
 -----------------------------------------------------------------------
+
+Let's see some examples, using the following types
+to show the subtyping relationship.
+
+```scala mdoc:reset:silent
+trait Animal
+trait Cat extends Animal
+trait DomesticShorthair extends Cat
+```
+
+No we'll define three different type classes for the three types of variance, 
+and define an instance of each for the `Cat` type.
+
+```scala mdoc:silent
+trait Inv[A] {
+  def result: String
+}
+object Inv {
+  given Inv[Cat] with
+    def result = "Invariant"
+    
+  def apply[A](using instance: Inv[A]): String =
+    instance.result
+}
+
+trait Co[+A] {
+  def result: String
+}
+object Co {
+  given Co[Cat] with
+    def result = "Covariant"
+
+  def apply[A](using instance: Co[A]): String =
+    instance.result
+}
+
+trait Contra[-A] {
+  def result: String
+}
+object Contra {
+  given Contra[Cat] with
+    def result = "Contravariant"
+
+  def apply[A](using instance: Contra[A]): String =
+    instance.result
+}
+```
+
+Now the cases that work, all of which select the `Cat` instance.
+For the invariant case we must ask for exactly the `Cat` type.
+For the covariant case we can ask for a supertype of `Cat`.
+For contravariance we can ask for a subtype of `Cat`.
+
+```scala mdoc
+Inv[Cat]
+Co[Animal]
+Co[Cat]
+Contra[DomesticShorthair]
+Contra[Cat]
+```
+
+Now cases that fail.
+With invariance any type that is not `Cat` will fail.
+So the supertype fails
+
+```scala mdoc:fail
+Inv[Animal]
+```
+
+as does the subtype.
+
+```scala mdoc:fail
+Inv[DomesticShorthair]
+```
+
+Covariance fails for any subtype of the type for which the instance is declared.
+
+```scala mdoc:fail
+Co[DomesticShorthair]
+```
+
+Contravariance fails for any supertype of the type for which the instance is declared.
+
+```scala mdoc:fail
+Contra[Animal]
+```
 
 It's clear there is no perfect system.
 Cats prefers to use invariant type classes.
