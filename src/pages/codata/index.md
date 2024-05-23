@@ -1,4 +1,4 @@
-# Objects as Codata
+# Objects as Codata {#sec:codata}
 
 In this chapter we will look at **codata**, the dual of algebraic data types.
 Algebraic data types focus on how things are constructed.

@@ -67,6 +67,7 @@ lazy val pages = List(
   "type-classes/given.md",
   "type-classes/anatomy.md",
   "type-classes/composition.md",
+  "type-classes/what.md",
   "type-classes/display.md",
   "type-classes/instance-selection.md",
   "type-classes/summary.md",
