@@ -9,24 +9,17 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Download Java
-        uses: typelevel/download-java@v2
+        uses: actions/setup-java@v4
         id: download-java
         with:
-          distribution: 'temurin'
-          java-version: 17
-
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'jdkfile'
-          java-version: 17
-          jdkFile: ${{ steps.download-java.outputs.jdkFile }}
+          distribution: "temurin"
+          java-version: 21
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20.9.0'
-          cache: 'npm'
+          node-version: "20.9.0"
+          cache: "npm"
       - run: npm ci
 
       # - name: Install TeX Live
@@ -48,13 +41,13 @@ jobs:
       - name: Setup Pandoc
 
         run: |
-            curl -Ls https://github.com/jgm/pandoc/releases/download/3.1.11/pandoc-3.1.11-linux-amd64.tar.gz > /tmp/pandoc.tgz
-            tar zxvf /tmp/pandoc.tgz
-            mv pandoc-3.1.11/bin/pandoc /usr/local/bin/pandoc
+          curl -Ls https://github.com/jgm/pandoc/releases/download/3.1.11/pandoc-3.1.11-linux-amd64.tar.gz > /tmp/pandoc.tgz
+          tar zxvf /tmp/pandoc.tgz
+          mv pandoc-3.1.11/bin/pandoc /usr/local/bin/pandoc
 
-            curl -Ls https://github.com/lierdakil/pandoc-crossref/releases/download/v0.3.17.0b/pandoc-crossref-Linux.tar.xz > /tmp/pandoc-crossref.tgz
-            tar xvf /tmp/pandoc-crossref.tgz
-            mv pandoc-crossref /usr/local/bin/pandoc-crossref
+          curl -Ls https://github.com/lierdakil/pandoc-crossref/releases/download/v0.3.17.0b/pandoc-crossref-Linux.tar.xz > /tmp/pandoc-crossref.tgz
+          tar xvf /tmp/pandoc-crossref.tgz
+          mv pandoc-crossref /usr/local/bin/pandoc-crossref
 
       - name: Cache sbt
         uses: actions/cache@v4
