@@ -1,10 +1,10 @@
 ## Type Classes and Variance
 
 In this section we'll discuss how variance interacts
-with type class instance selection
+with type class instance selection.
 Variance is one of the darker corners of Scala's type system,
-so we start by reviewing how it works.
-We then move on to its interaction with type classes.
+so we start by reviewing it
+before moving on to its interaction with type classes.
 
 
 ### Variance {#sec:variance}
@@ -16,7 +16,7 @@ will the expression `Json.toJson(Some(1))` select this instance?
 (Remember that `Some` is a subtype of `Option`).
 
 We need two concepts to explain variance: 
-type constructors; and subtyping.
+type constructors, and subtyping.
 
 Variance applies to any **type constructor**,
 which is the `F` in a type `F[A]`.
@@ -29,7 +29,8 @@ Subtyping is a relationship between types.
 We say that `B` is a subtype of `A`
 if we can use a value of type `B`
 anywhere we expect a value of type `A`.
-This is written `B <: A`.
+We may sometimes use the shorthand `B <: A`
+to indicate that `B` is a subtype of `A`.
 
 Variance concerns the subtyping relationship between types `F[A]` and `F[B]`,
 given a subtyping relationship between `A` and `B`.
@@ -40,17 +41,16 @@ If `B` is a subtype of `A` then
 3. if there is no subtyping relationship between `F[B]` and `F[A]` we say `F` is **invariant** in `A`.
 
 
-Invariance is the default.
-When we define a type constructor we can
-add variance annotations to the type parameter
-to chose co- or contra-variance.
+When we define a type constructor
+we can also add variance annotations to its type parameters.
 For example, we denote covariance with a `+` symbol:
 
 ```scala
 trait F[+A] // the "+" means "covariant"
 ```
 
-Let's now look at these in more detail.
+If we don't add a variance annotation, the type parameter is invariant.
+Let's now look at covariance, contravariance, and invariance in detail.
 
 
 ### Covariance
@@ -224,7 +224,7 @@ trait Cat extends Animal
 trait DomesticShorthair extends Cat
 ```
 
-No we'll define three different type classes for the three types of variance, 
+Now we'll define three different type classes for the three types of variance, 
 and define an instance of each for the `Cat` type.
 
 ```scala mdoc:silent
@@ -302,7 +302,7 @@ Contra[Animal]
 ```
 
 It's clear there is no perfect system.
-Cats prefers to use invariant type classes.
+The most choice is to use invariant type classes.
 This allows us to specify
 more specific instances for subtypes if we want.
 It does mean that if we have, for example,
