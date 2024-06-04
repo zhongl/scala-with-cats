@@ -19,4 +19,6 @@ Additionally, we can view type classes as shifting implementation from the defin
 
 [Implicit parameters: dynamic scoping with static types][implicits] introduces implicit parameters, which provided inspiration for Scala 2's implicit parameters and evolved into Scala 3's given instances and using clauses. It's interesting to see the differences between implicit parameters as proposed here and how they are implemented in Scala.
 
+[@10.1145/325694.325708]
+
 [implicits]: https://dl.acm.org/doi/abs/10.1145/325694.325708

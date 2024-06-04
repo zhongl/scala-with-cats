@@ -32,12 +32,16 @@ mdocVariables := Map(
 )
 
 lazy val pages = List(
+  // Front matter
+  "parts/frontmatter.md",
   "preface/preface.md",
   "preface/versions.md",
   "preface/conventions.md",
   "preface/contributors.md",
   "preface/backers.md",
   "preface/license.md",
+  // Main matter
+  "parts/mainmatter.md",
   // Intro
   "intro/index.md",
   "intro/three-levels.md",
@@ -70,7 +74,7 @@ lazy val pages = List(
   "type-classes/what.md",
   "type-classes/display.md",
   "type-classes/instance-selection.md",
-  "type-classes/summary.md",
+  "type-classes/conclusions.md",
   // Interpreters
   "adt-interpreters/index.md",
   "adt-interpreters/regexp.md",
@@ -155,10 +159,14 @@ lazy val pages = List(
   // "case-studies/parser/transforms.md",
   // "case-studies/parser/applicative.md",
 
-  "parts/solutions.md",
+  // Appendices and back matter
+  "parts/appendices.md",
   "solutions.md",
-  "links.md",
-  "parts/part4.md"
+  // Must be last heading for pandoc to insert bibliography in the correct
+  // place.
+  "parts/backmatter.md",
+  "bibliography.md",
+  "links.md"
 )
 
 /*

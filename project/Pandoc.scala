@@ -111,7 +111,7 @@ object Pandoc {
         List(output),
         template.toList,
         List(
-          "--from=markdown+grid_tables+multiline_tables+fenced_code_blocks+fenced_code_attributes+yaml_metadata_block+implicit_figures+header_attributes+definition_lists+link_attributes",
+          "--from=markdown+grid_tables+multiline_tables+fenced_code_blocks+fenced_code_attributes+yaml_metadata_block+implicit_figures+header_attributes+definition_lists+link_attributes+citations",
           s"--variable=lib-dir:${srcDir}"
         ),
         filters,
@@ -121,7 +121,8 @@ object Pandoc {
           "--table-of-contents",
           "--highlight-style tango",
           "--standalone",
-          "--embed-resources"
+          "--embed-resources",
+          "--citeproc"
         ),
         extras,
         metadata,

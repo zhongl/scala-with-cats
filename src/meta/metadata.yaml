@@ -2,7 +2,7 @@
 title: "Functional Programming Strategies"
 subtitle: "In Scala with Cats"
 author: "Noel Welsh"
-date: "February 2024"
+date: "June 2024"
 license: "CC BY-SA 4.0"
 tocDepth: 1
 copyright: "2022-24"
@@ -11,4 +11,8 @@ eqnPrefixTemplate: "$$i$$"
 tblPrefixTemplate: "$$i$$"
 lstPrefixTemplate: "$$i$$"
 secPrefixTemplate: "$$i$$"
-...
+bibliography: src/bib/scala-with-cats.bib
+citation-style: src/bib/acm-sigchi-proceedings.csl
+# reference-section-title: Bibliography
+# link-citations: true
+---
