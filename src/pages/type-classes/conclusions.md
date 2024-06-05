@@ -19,7 +19,7 @@ Additionally, we can view type classes as shifting implementation from the defin
 
 Type classes were introduced in [@10.1007/3-540-19027-9_9] and [@10.1145/75277.75283]. The concept of implicit parameters didn't come until later, in [@10.1145/325694.325708]. The original motivation for implicit parameters was to decompose type classes into smaller orthogonal language features, but they were shown to be useful for several other tasks. Scala's implementation differs in several ways from the original presentation, but they similarly have proven useful for solving problems beyond type classes. Our focus here
 
-Type classes in Scala [@10.1145/1932682.1869489]
+Type classes in Scala [@10.1145/1869459.1869489]
 
 [Implicit parameters: dynamic scoping with static types][implicits] introduces implicit parameters, which provided inspiration for Scala 2's implicit parameters and evolved into Scala 3's given instances and using clauses. It's interesting to see the differences between implicit parameters as proposed here and how they are implemented in Scala.
 
