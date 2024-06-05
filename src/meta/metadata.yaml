@@ -12,7 +12,5 @@ tblPrefixTemplate: "$$i$$"
 lstPrefixTemplate: "$$i$$"
 secPrefixTemplate: "$$i$$"
 bibliography: src/bib/scala-with-cats.bib
-citation-style: src/bib/acm-sigchi-proceedings.csl
-# reference-section-title: Bibliography
-# link-citations: true
+citation-style: src/bib/acm-siggraph.csl
 ---
