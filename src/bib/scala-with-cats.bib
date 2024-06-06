@@ -78,3 +78,53 @@ numpages = {13},
 location = {Imperial College, London, United Kingdom},
 series = {FPCA '89}
 }
+
+@article{10.1145/3360589,
+author = {K\v{r}ikava, Filip and Miller, Heather and Vitek, Jan},
+title = {Scala implicits are everywhere: a large-scale study of the use of Scala implicits in the wild},
+year = {2019},
+issue_date = {October 2019},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {3},
+number = {OOPSLA},
+url = {https://doi.org/10.1145/3360589},
+doi = {10.1145/3360589},
+abstract = {The Scala programming language offers two distinctive language features implicit parameters and implicit conversions, often referred together as implicits. Announced without fanfare in 2004, implicits have quickly grown to become a widely and pervasively used feature of the language. They provide a way to reduce the boilerplate code in Scala programs. They are also used to implement certain language features without having to modify the compiler. We report on a large-scale study of the use of implicits in the wild. For this, we analyzed 7,280 Scala projects hosted on GitHub, spanning over 8.1M call sites involving implicits and 370.7K implicit declarations across 18.7M lines of Scala code.},
+journal = {Proc. ACM Program. Lang.},
+month = {oct},
+articleno = {163},
+numpages = {28},
+keywords = {Implicit parameters, Scala, corpora analysis, implicit conversions}
+}
+
+@article{OLIVEIRA_GIBBONS_2010
+, title={Scala for generic programmers: Comparing Haskell and Scala support for generic programming}
+, volume={20}
+, DOI={10.1017/S0956796810000171}
+, url={https://www.cambridge.org/core/journals/journal-of-functional-programming/article/scala-for-generic-programmers/223EB37E77EA36B27AE33A644DA70926}
+, number={3–4}
+, journal={Journal of Functional Programming}
+, author={Oliveira, Bruno C. D. S. and Gibbons, Jeremy}
+, year={2010}
+, pages={303–352}
+}
+
+@article{10.1145/3158130,
+author = {Odersky, Martin and Blanvillain, Olivier and Liu, Fengyun and Biboudis, Aggelos and Miller, Heather and Stucki, Sandro},
+title = {Simplicitly: foundations and applications of implicit function types},
+year = {2017},
+issue_date = {January 2018},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {2},
+number = {POPL},
+url = {https://doi.org/10.1145/3158130},
+doi = {10.1145/3158130},
+abstract = {Understanding a program entails understanding its context; dependencies, configurations and even implementations are all forms of contexts. Modern programming languages and theorem provers offer an array of constructs to define contexts, implicitly. Scala offers implicit parameters which are used pervasively, but which cannot be abstracted over. This paper describes a generalization of implicit parameters to implicit function types, a powerful way to abstract over the context in which some piece of code is run. We provide a formalization based on bidirectional type-checking that closely follows the semantics implemented by the Scala compiler. To demonstrate their range of abstraction capabilities, we present several applications that make use of implicit function types. We show how to encode the builder pattern, tagless interpreters, reader and free monads and we assess the performance of the monadic structures presented.},
+journal = {Proc. ACM Program. Lang.},
+month = {dec},
+articleno = {42},
+numpages = {29},
+keywords = {implicit parameters, Scala, Dotty}
+}
