@@ -37,7 +37,6 @@ lazy val pages = List(
   "preface/preface.md",
   "preface/versions.md",
   "preface/conventions.md",
-  "preface/contributors.md",
   "preface/backers.md",
   "preface/license.md",
   // Main matter
@@ -161,7 +160,8 @@ lazy val pages = List(
 
   // Appendices and back matter
   "parts/appendices.md",
-  "solutions.md",
+  "appendices/solutions.md",
+  "appendices/acknowledgements.md",
   // Must be last heading for pandoc to insert bibliography in the correct
   // place.
   "parts/backmatter.md",

@@ -1,4 +1,4 @@
-## Acknowledgements {-}
+# Acknowledgements
 
 No book is an island.
 This book wouldn't exist without it's predecessor, *Scala with Cats*, and everyone involved in creating that book implicitly played some part in this book's creation.
@@ -11,7 +11,7 @@ The members of ScalaBridge London and attendees at various training courses acte
 Finally, thanks for the members of the PLT research group who inspired me directly back in the day, and continue to provide inspiration from afar.
 
 
-### Acknowledgements from Scala with Cats {-}
+## Acknowledgements from Scala with Cats
 
 We'd like to thank our colleagues at Inner Product and Underscore,
 our friends at Typelevel,
@@ -82,3 +82,4 @@ and Yinka Erinle.
 If you spot an error or potential improvement,
 please raise an issue or submit a PR
 on the book's [Github page][link-github].
+
