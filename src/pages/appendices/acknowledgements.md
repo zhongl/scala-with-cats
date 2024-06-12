@@ -9,9 +9,17 @@ Thanks Dave!
 Thanks also to Adam Rosien, who gave me low-key encouragement and put up with my bullshit. Also my wife and children, who put up with even more of my bullshit, and gave me the space to finish this project.
 The members of ScalaBridge London and attendees at various training courses acted as experimental subjects for a lot of the material here. Thank you for being willing test subjects; you greatly helped improve the content.
 Thanks for the members of the PLT research group who inspired me directly back in the day, and continue to provide inspiration from afar.
-Finally, thanks to the following who contributed with corrections and suggestions:
+Finally, thanks to the following who sponsored my work or contributed with corrections and suggestions:
 
-Johanna Odersky
+Charles Adetiloye,
+Johanna Odersky,
+Maciej Gorywoda ,
+Mathieu Pichette,
+Murat Cetin ,
+Olya Mazhara,
+Pavel Syvak,
+Philip Schwarz,
+Seth Tisue
 
 
 ## Acknowledgements from Scala with Cats
