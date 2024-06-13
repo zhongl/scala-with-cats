@@ -23,22 +23,21 @@ Below are some references that you might find useful if you want to dig in furth
 
 Algebraic data types are standard in introductory material on functional programming. 
 Structural recursion is certainly extremely common in functional programming, but strangely seems to rarely be explicitly defined as I've done here.
-I learned about both from [How to Design Programs](https://htdp.org/).
+I learned about both from *How to Design Programs* [@felleisen18:htdp].
 
 I'm not aware of any approachable yet thorough treatment of either algebraic data types or structural recursion.
 Both seem to have become assumed background of any researcher in the field of programming languages,
 and relatively recent work is caked in layers of mathematics and obtuse notation that I find difficult reading.
-The infamous [Functional Programming with Bananas, Lenses, Envelopes and Barbed Wire][banana] is an example of such work.
+The infamous *Functional Programming with Bananas, Lenses, Envelopes and Barbed Wire* [@10.1007/3540543961_7] is an example of such work.
 I suspect the core ideas of both date back to at least the emergence of computability theory in the 1930s, well before any digital computers existed.
 
-The earliest reference I've found to structural recursion is [Proving Properties of Programs by Structural Induction][structural-induction], which dates to 1969. 
+The earliest reference I've found to structural recursion is *Proving Properties of Programs by Structural Induction* [@10.1093/comjnl/12.1.41]. 
 Algebraic data types don't seem to have been fully developed, along with pattern matching, until [NPL][npl] in 1977. 
 NPL was quickly followed by the more influential language [Hope][hope], which spread the concept to other programming languages.
 
-Corecursion is a bit better documented in the contemporary literature. [How to Design Co-Programs][htdc] covers the main idea we have looked at here. 
-[The Under-Appreciated Unfold][unfold] discusses uses of `unfold`. 
+Corecursion is a bit better documented in the contemporary literature. *How to Design Co-Programs* [@GIBBONS_2021] covers the main ideas we have looked at here, while @10.1145/291251.289455 discusses uses of `unfold`.
 
-[The Derivative of a Regular Type is its Type of One-Hole Contexts][deriv] describes the derivative of algebraic data types.
+*The Derivative of a Regular Type is its Type of One-Hole Contexts* [@mcbride01:deriv] describes the derivative of algebraic data types.
 
 
 
