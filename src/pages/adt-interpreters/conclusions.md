@@ -24,10 +24,8 @@ For example, if we know the library will only used in situations where inputs we
 As always, only use coding techniques where they make sense.
 
 These ideas are classics in programming language theory.
-[Definitional Interpreters for Higher-Order Programming Languages][defn], which was first published in 1972 though I link to the re-typeset version from 1998, details defunctionalization, a limited form of reification, and continuation passing style.
-These ideas are expanded on in [Defunctionalization at Work][at-work].
-[Continuation-Passing Style, Defunctionalization, Accumulations, and Associativity][assoc] is a very readable and elegant paper that highlights the importance of associativity in these transformations.
+*Definitional Interpreters for Higher-Order Programming Languages* [@10.1145/800194.805852] details defunctionalization, a limited form of reification and continuation passing style. (If you want to read this paper, I suggest the [re-typeset version from 1998][defn], which is much more readable than the original typewriter version.)
+These ideas are expanded on in *Defunctionalization at Work* [@10.1145/773184.773202].
+*Continuation-Passing Style, Defunctionalization, Accumulations, and Associativity* [@gibbons22:cps] is a very readable and elegant paper that highlights the importance of associativity in these transformations.
 
 [defn]: https://homepages.inf.ed.ac.uk/wadler/papers/papers-we-love/reynolds-definitional-interpreters-1998.pdf
-[at-work]: https://www.brics.dk/RS/01/23/BRICS-RS-01-23.pdf
-[assoc]: https://www.cs.ox.ac.uk/jeremy.gibbons/publications/continued.pdf

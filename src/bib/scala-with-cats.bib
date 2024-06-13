@@ -289,3 +289,49 @@ abstract = {A new data type declaration mechanism of defining codatatypes is int
   title           = {Beyond Church encoding: Boehm-Berarducci isomorphism of algebraic data types and polymorphic lambda-terms},
   year            = 2005,
   url          = {https://okmij.org/ftp/tagless-final/course/Boehm-Berarducci.html}}
+
+@inproceedings{10.1145/800194.805852,
+author = {Reynolds, John C.},
+title = {Definitional interpreters for higher-order programming languages},
+year = {1972},
+isbn = {9781450374927},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/800194.805852},
+doi = {10.1145/800194.805852},
+abstract = {Higher-order programming languages (i.e., languages in which procedures or labels can occur as values) are usually defined by interpreters which are themselves written in a programming language based on the lambda calculus (i.e., an applicative language such as pure LISP). Examples include McCarthy's definition of LISP, Landin's SECD machine, the Vienna definition of PL/I, Reynolds' definitions of GEDANKEN, and recent unpublished work by L. Morris and C. Wadsworth. Such definitions can be classified according to whether the interpreter contains higher-order functions, and whether the order of application (i.e., call-by-value versus call-by-name) in the defined language depends upon the order of application in the defining language. As an example, we consider the definition of a simple applicative programming language by means of an interpreter written in a similar language. Definitions in each of the above classifications are derived from one another by informal but constructive methods. The treatment of imperative features such as jumps and assignment is also discussed.},
+booktitle = {Proceedings of the ACM Annual Conference - Volume 2},
+pages = {717–740},
+numpages = {24},
+keywords = {Applicative language, Closure, Continuation, GEDANKEN, Higher-order function, Interpreter, J-operator, LISP, Lambda calculus, Language definition, Order of application, PAL, Programming language, Reference, SECD machine},
+location = {Boston, Massachusetts, USA},
+series = {ACM '72}
+}
+
+@inproceedings{10.1145/773184.773202,
+author = {Danvy, Olivier and Nielsen, Lasse R.},
+title = {Defunctionalization at work},
+year = {2001},
+isbn = {158113388X},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/773184.773202},
+doi = {10.1145/773184.773202},
+abstract = {Reynolds's defunctionalization technique is a whole-program transformation from higher-order to first-order functional programs. We study practical applications of this transformation and uncover new connections between seemingly unrelated higher-order and first-order specifications and between their correctness proofs. Defunctionalization therefore appearsboth as a springboard for rev ealing new connections and as a bridge for transferring existing results between the first-order world and the higher-order world.},
+booktitle = {Proceedings of the 3rd ACM SIGPLAN International Conference on Principles and Practice of Declarative Programming},
+pages = {162–174},
+numpages = {13},
+keywords = {syntactic theories, supercombinator conversion, regular expressions, lambda-lifting, higher-order programs, first-order programs, direct-style transformation, defunctionalization, continuations, continuation-passing style (CPS), closure conversion, church encoding, Scheme, ML, CPS transformation},
+location = {Florence, Italy},
+series = {PPDP '01}
+}
+
+@Article{gibbons22:cps,
+  author          = {Jeremy Gibbons},
+  title           = {Continuation-Passing Style, Defunctionalization, Accumulations, and Associativity},
+  journaltitle    = {The Art, Science, and Engineering of Programming},
+  year            = 2022,
+  volume       = 6,
+  number       = 7,
+  issue        = 2,
+  doi          = {https://doi.org/10.22152/programming-journal.org/2022/6/7}}
