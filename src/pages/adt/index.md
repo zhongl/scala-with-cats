@@ -1,4 +1,4 @@
-# Algebraic Data Types
+# Algebraic Data Types {#sec:adt}
 
 This chapter has our first example of a programming strategy: **algebraic data types**. Any data we can describe using logical ands and logical ors is an algebraic data type. Once we recognize an algebraic data type we get three things for free:
 

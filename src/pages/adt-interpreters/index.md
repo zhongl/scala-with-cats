@@ -1,4 +1,4 @@
-# Reified Interpreters
+# Reified Interpreters {#sec:interpreters}
 
 The interpreter strategy is perhaps the most important in all of functional programming. The central idea is to **separate description from action**. When we use the interpreter strategy our program consists of two parts: the description, instructions, or program that describes what we want to do, and the interpreter that carries the actions in the description. In this chapter we'll start exploring the design and implementation of interpreters, focusing on implementations using algebraic data types. 
 
