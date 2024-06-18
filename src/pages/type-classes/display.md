@@ -1,4 +1,4 @@
-## Exercise: Display Library
+## Exercise: Display Library {#sec:type-classes:display}
 
 Scala provides a `toString` method
 to let us convert any value to a `String`.

@@ -1,15 +1,45 @@
-# Using Cats
+# Using Cats {#sec:cats}
 
-In the previous section we saw how to implement type classes in Scala.
-In this section we will look at how type classes are implemented in Cats.
+In this Chapter we'll learn how to use the [Cats](https://typelevel.org/cats) library.
+Cats provides two main things: use type classes and type classes instances, and some useful data structures.
+Our focus will mostly be on the type classes and their instances, though we will touch on the data structures where appropriate.
+Remember, this part of the book is all about using type classes,
+both as tools to make day-to-day programming easier,
+and as tools for program design.
+(We covered type class implementation in Chapter [@sec:type-classes].)
+Using Cats makes it easier to focus on the points we're interested in,
+as we don't have to implement all these tools for ourselves.
 
-Cats is written using a modular structure
-that allows us to choose which type classes, instances,
-and interface methods we want to use.
-Let's take a first look using [`cats.Show`][cats.Show] as an example.
+
+## Quick Start
+
+The easiest, and recommended, way to use Cats is to add the following imports:
+
+```scala mdoc:silent
+import cats.*
+import cats.syntax.all.*
+```
+
+The first import adds all the type classes (and makes their instances available,
+as they are found in the companion objects.)
+The second import adds the syntax helpers,
+which makes the type classes easier to work with.
+Note we don't need to `import cats.{*, given}` as, at the time of writing, Cats is written in Scala 2 style (using `implicits`) and these are imported by the wildcard import.
+
+If we want use some of Cats' datastructures, we also need to add
+
+```scala mdoc:silent
+import cats.data.*
+```
+
+
+## Using Cats
+
+Let's now see how we work with Cats, 
+using [`cats.Show`][cats.Show] as an example.
 
 `Show` is Cats' equivalent of
-the `Printable` type class we defined in the last section.
+the `Display` type class we defined in Section [@sec:type-classes:display].
 It provides a mechanism for producing
 developer-friendly console output without using `toString`.
 Here's an abbreviated definition:
@@ -39,7 +69,7 @@ val showInt = Show.apply[Int]
 ```
 
 Oops---that didn't work!
-The `apply` method uses *implicits* to look up individual instances,
+The `apply` method has a `using` clause to look up individual instances,
 so we'll have to bring some instances into scope.
 
 ### Importing Default Instances {#sec:importing-default-instances}
