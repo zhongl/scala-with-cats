@@ -6,7 +6,7 @@ There are instances for `Ints`, `Strings`, `Lists`, `Options`, and many more.
 Let's start by looking at a few simple types and operations
 to see what common principles we can extract.
 
-**Integer addition**
+#### Integer addition
 
 Addition of `Ints` is a binary operation that is *closed*,
 meaning that adding two `Ints` always produces another `Int`:
@@ -35,7 +35,8 @@ This is a property known as *associativity*:
 1 + (2 + 3)
 ```
 
-**Integer multiplication**
+
+#### Integer multiplication
 
 The same properties for addition also apply for multiplication,
 provided we use `1` as the identity instead of `0`:
@@ -54,7 +55,8 @@ Multiplication, like addition, is associative:
 1 * (2 * 3)
 ```
 
-**String and sequence concatenation**
+
+#### String and sequence concatenation
 
 We can also add `Strings`,
 using string concatenation as our binary operator:
@@ -85,6 +87,7 @@ We can do the same with other types of sequence,
 using concatenation as the binary operator
 and the empty sequence as our identity.
 
+
 ## Definition of a Monoid
 
 We've seen a number of "addition" scenarios above
@@ -114,13 +117,13 @@ For all values `x`, `y`, and `z`, in `A`,
 
 ```scala mdoc:silent
 def associativeLaw[A](x: A, y: A, z: A)
-      (implicit m: Monoid[A]): Boolean = {
+      (using m: Monoid[A]): Boolean = {
   m.combine(x, m.combine(y, z)) ==
     m.combine(m.combine(x, y), z)
 }
 
 def identityLaw[A](x: A)
-      (implicit m: Monoid[A]): Boolean = {
+      (using m: Monoid[A]): Boolean = {
   (m.combine(x, m.empty) == x) &&
     (m.combine(m.empty, x) == x)
 }
@@ -142,6 +145,7 @@ they can yield unpredictable results
 when used with the rest of Cats' machinery.
 Most of the time we can rely on the instances provided by Cats
 and assume the library authors know what they're doing.
+
 
 ## Definition of a Semigroup
 
@@ -176,7 +180,8 @@ If we define a `Monoid` for a type `A`, we get a `Semigroup` for free.
 Similarly, if a method requires a parameter of type `Semigroup[B]`,
 we can pass a `Monoid[B]` instead.
 
-## Exercise: The Truth About Monoids
+
+#### Exercise: The Truth About Monoids 
 
 We've seen a few examples of monoids but there are plenty more to be found.
 Consider `Boolean`. How many monoids can you define for this type?
@@ -200,11 +205,11 @@ object Monoid {
 ```
 
 <div class="solution">
-There are four monoids for `Boolean`!
+There are at least four monoids for `Boolean`!
 First, we have *and* with operator `&&` and identity `true`:
 
 ```scala mdoc:silent
-implicit val booleanAndMonoid: Monoid[Boolean] =
+given booleanAndMonoid: Monoid[Boolean] =
   new Monoid[Boolean] {
     def combine(a: Boolean, b: Boolean) = a && b
     def empty = true
@@ -251,7 +256,8 @@ Similarly associativity of the `combine` operation
 can be shown by enumerating the cases.
 </div>
 
-## Exercise: All Set for Monoids
+
+#### Exercise: All Set for Monoids
 
 What monoids and semigroups are there for sets?
 

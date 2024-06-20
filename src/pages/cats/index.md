@@ -90,11 +90,9 @@ simply by implementing the trait for a given type:
 ```scala mdoc:silent
 import java.util.Date
 
-given dateShow: Show[Date] =
-  new Show[Date] {
-    def show(date: Date): String =
-      s"${date.getTime}ms since the epoch."
-  }
+given dateShow: Show[Date] with 
+  def show(date: Date): String =
+    s"${date.getTime}ms since the epoch."
 ```
 ```scala mdoc
 new Date().show
@@ -135,7 +133,8 @@ Many type classes in Cats provide helper methods like these
 for constructing instances, either from scratch
 or by transforming existing instances for other types.
 
-### Exercise: Cat Show
+
+#### Exercise: Cat Show
 
 Re-implement the `Cat` application from Section [@sec:type-classes:cat]
 using `Show` instead of `Display`.

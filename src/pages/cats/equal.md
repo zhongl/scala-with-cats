@@ -153,7 +153,7 @@ x === y
 ```
 
 
-### Exercise: Equality, Liberty, and Felinity
+#### Exercise: Equality, Liberty, and Felinity
 
 Implement an instance of `Eq` for our running `Cat` example:
 
