@@ -56,7 +56,7 @@ final class InsertOneSet[A](element: A, source: Set[A])
     extends Set[A] {
 
   def contains(elt: A): Boolean =
-    elt == elt || source.contains(elt)
+    elt == element || source.contains(elt)
 }
 
 final class UnionSet[A](first: Set[A], second: Set[A])

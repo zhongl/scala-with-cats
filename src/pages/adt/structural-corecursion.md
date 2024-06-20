@@ -140,7 +140,7 @@ def unfold[A, B](seed: A): MyList[B] =
   ???
 ```
 
-Now we start start using our strategies to fill in the missing pieces. I'm using the corecursion skeleton and I've applied the recursion rule immediately in the code below, to save a bit of time in the derivation.
+Now we start using our strategies to fill in the missing pieces. I'm using the corecursion skeleton and I've applied the recursion rule immediately in the code below, to save a bit of time in the derivation.
 
 ```scala
 def unfold[A, B](seed: A): MyList[B] =
