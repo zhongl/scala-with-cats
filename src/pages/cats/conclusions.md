@@ -10,14 +10,10 @@ We have also seen the general patterns in Cats type classes:
    one or more *construction* methods for creating instances,
    and a collection of other relevant helper methods.
 
- - Default instances are provided via objects
-   in the [`cats.instances`][cats.instances] package,
-   and are organized by parameter type rather than by type class.
-
  - Many type classes have *syntax*
    provided via the [`cats.syntax`][cats.syntax] package.
 
-In the remaining chapters of Part I
+In the remaining chapters of Part {#sec:part:two}
 we will look at several broad and powerful type classes---`Semigroup`,
 `Monoid`, `Functor`, `Monad`, `Semigroupal`, `Applicative`, `Traverse`, and more.
 In each case we will learn what functionality the type class provides,

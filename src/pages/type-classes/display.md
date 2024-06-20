@@ -83,7 +83,7 @@ Notice that the `Display` instance on `print` is anonymous.
 This is allowed in Scala 3, and works because we only pass it to `display`.
 </div>
 
-### Using the Library
+### Using the Library {#sec:type-classes:cat}
 
 The code above forms a general purpose printing library
 that we can use in multiple applications.

@@ -1,14 +1,8 @@
 # Using Cats {#sec:cats}
 
 In this Chapter we'll learn how to use the [Cats](https://typelevel.org/cats) library.
-Cats provides two main things: use type classes and type classes instances, and some useful data structures.
-Our focus will mostly be on the type classes and their instances, though we will touch on the data structures where appropriate.
-Remember, this part of the book is all about using type classes,
-both as tools to make day-to-day programming easier,
-and as tools for program design.
-(We covered type class implementation in Chapter [@sec:type-classes].)
-Using Cats makes it easier to focus on the points we're interested in,
-as we don't have to implement all these tools for ourselves.
+Cats provides two main things: type classes and their instances, and some useful data structures.
+Our focus will mostly be on the type classes, though we will touch on the data structures where appropriate.
 
 
 ## Quick Start
@@ -20,8 +14,8 @@ import cats.*
 import cats.syntax.all.*
 ```
 
-The first import adds all the type classes (and makes their instances available,
-as they are found in the companion objects.)
+The first import adds all the type classes 
+(and makes their instances available, as they are found in the companion objects.)
 The second import adds the syntax helpers,
 which makes the type classes easier to work with.
 Note we don't need to `import cats.{*, given}` as, at the time of writing, Cats is written in Scala 2 style (using `implicits`) and these are imported by the wildcard import.
@@ -52,10 +46,8 @@ trait Show[A] {
 }
 ```
 
-### Importing Type Classes
-
-The type classes in Cats are defined in the [`cats`][cats.package] package.
-We can import `Show` directly from this package:
+The easiest way to use `Show` is with the wildcard import above.
+However, we can also import `Show` directly from the [cats][cats.package] package:
 
 ```scala mdoc:silent
 import cats.Show
@@ -64,85 +56,30 @@ import cats.Show
 The companion object of every Cats type class has an `apply` method
 that locates an instance for any type we specify:
 
-```scala mdoc
+```scala mdoc:silent
 val showInt = Show.apply[Int]
 ```
 
-Oops---that didn't work!
-The `apply` method has a `using` clause to look up individual instances,
-so we'll have to bring some instances into scope.
-
-### Importing Default Instances {#sec:importing-default-instances}
-
-The [`cats.instances`][cats.instances] package
-provides default instances for a wide variety of types.
-We can import these as shown in the table below.
-Each import provides instances of all Cats' type classes
-for a specific parameter type:
-
-- [`cats.instances.int`][cats.instances.int] provides instances for `Int`
-- [`cats.instances.string`][cats.instances.string] provides instances for `String`
-- [`cats.instances.list`][cats.instances.list] provides instances for `List`
-- [`cats.instances.option`][cats.instances.option] provides instances for `Option`
-- [`cats.instances.all`][cats.instances.all] provides all instances that are shipped out of the box with Cats
-
-See the [`cats.instances`][cats.instances] package
-for a complete list of available imports.
-
-Let's import the instances of `Show` for `Int` and `String`:
-
-```scala mdoc:reset:silent
-import cats.Show
-import cats.instances.int._    // for Show
-import cats.instances.string._ // for Show
-
-val showInt:    Show[Int]    = Show.apply[Int]
-val showString: Show[String] = Show.apply[String]
-```
-
-That's better! We now have access to two instances of `Show`,
-and can use them to print `Ints` and `Strings`:
+Once we have an instance we can call methods on it.
 
 ```scala mdoc
-val intAsString: String =
-  showInt.show(123)
-
-val stringAsString: String =
-  showString.show("abc")
+showInt.show(42)
 ```
 
-### Importing Interface Syntax
+More common, however, is to use the syntax or extension methods,
+which we imported with `import cats.syntax.all.*`.
+In the case of `Show`, an extension method `show` is defined.
 
-We can make `Show` easier to use by
-importing the *interface syntax* from [`cats.syntax.show`][cats.syntax.show].
-This adds an extension method called `show`
-to any type for which we have an instance of `Show` in scope:
+```scala mdoc
+42.show
+```
+
+If, for some reason, we wanted just the syntax for `show`,
+we could import [`cats.syntax.show`][cats.syntax.show].
 
 ```scala mdoc:silent
-import cats.syntax.show._ // for show
+import cats.syntax.show.* // for show
 ```
-
-```scala mdoc
-val shownInt = 123.show
-
-val shownString = "abc".show
-```
-
-Cats provides separate syntax imports for each type class.
-We will introduce these as we encounter them in later sections and chapters.
-
-### Importing All The Things!
-
-In this book we will use specific imports to show you
-exactly which instances and syntax you need in each example.
-However, this doesn't add value in production code.
-It is simpler and faster to use the following imports:
-
-- `import cats._` imports all of Cats' type classes in one go;
-
-- `import cats.implicits._` imports
-  all of the standard type class instances
-  *and* all of the syntax in one go.
 
 
 ### Defining Custom Instances {#defining-custom-instances}
@@ -153,7 +90,7 @@ simply by implementing the trait for a given type:
 ```scala mdoc:silent
 import java.util.Date
 
-implicit val dateShow: Show[Date] =
+given dateShow: Show[Date] =
   new Show[Date] {
     def show(date: Date): String =
       s"${date.getTime}ms since the epoch."
@@ -188,7 +125,7 @@ import cats.Show
 import java.util.Date
 ```
 ```scala mdoc:silent
-implicit val dateShow: Show[Date] =
+given dateShow: Show[Date] =
   Show.show(date => s"${date.getTime}ms since the epoch.")
 ```
 
@@ -200,20 +137,39 @@ or by transforming existing instances for other types.
 
 ### Exercise: Cat Show
 
-Re-implement the `Cat` application from the previous section
-using `Show` instead of `Printable`.
+Re-implement the `Cat` application from Section [@sec:type-classes:cat]
+using `Show` instead of `Display`.
+
+Using this data type to represent a well-known type of furry animal:
+
+```scala
+final case class Cat(name: String, age: Int, color: String)
+```
+
+create an implementation of `Display` for `Cat`
+that returns content in the following format:
+
+```ruby
+NAME is a AGE year-old COLOR cat.
+```
+
+Then use the type class on the console or in a short demo app:
+create a `Cat` and print it to the console:
+
+```scala
+// Define a cat:
+val cat = Cat(/* ... */)
+
+// Print the cat!
+```
+
 
 <div class="solution">
-First let's import everything we need from Cats:
-the `Show` type class,
-the instances for `Int` and `String`,
-and the interface syntax:
+First let's import everything we need from Cats.
 
 ```scala mdoc:reset-object:silent
-import cats.Show
-import cats.instances.int._    // for Show
-import cats.instances.string._ // for Show
-import cats.syntax.show._      // for show
+import cats.*
+import cats.syntax.all.*
 ```
 
 Our definition of `Cat` remains the same:
@@ -222,11 +178,11 @@ Our definition of `Cat` remains the same:
 final case class Cat(name: String, age: Int, color: String)
 ```
 
-In the companion object we replace our `Printable` with an instance of `Show`
+In the companion object we replace our `Display` instance with an instance of `Show`
 using one of the definition helpers discussed above:
 
 ```scala mdoc:silent
-implicit val catShow: Show[Cat] = Show.show[Cat] { cat =>
+given catShow: Show[Cat] = Show.show[Cat] { cat =>
   val name  = cat.name.show
   val age   = cat.age.show
   val color = cat.color.show

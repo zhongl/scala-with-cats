@@ -26,6 +26,7 @@ However, it's not technically a type error because
 `Eq` is designed to add some type safety to equality checks
 and work around this problem.
 
+
 ### Equality, Liberty, and Fraternity
 
 We can use `Eq` to define type-safe equality
@@ -47,19 +48,18 @@ provided there is an instance `Eq[A]` in scope:
  - `===` compares two objects for equality;
  - `=!=` compares two objects for inequality.
 
+
 ### Comparing Ints
 
 Let's look at a few examples. First we import the type class:
 
 ```scala mdoc:silent:reset-object
-import cats.Eq
+import cats.*
 ```
 
 Now let's grab an instance for `Int`:
 
 ```scala mdoc:silent
-import cats.instances.int._ // for Eq
-
 val eqInt = Eq[Int]
 ```
 
@@ -82,7 +82,7 @@ We can also import the interface syntax in [`cats.syntax.eq`][cats.syntax.eq]
 to use the `===` and `=!=` methods:
 
 ```scala mdoc:silent
-import cats.syntax.eq._ // for === and =!=
+import cats.syntax.all.* // for === and =!=
 ```
 
 ```scala mdoc
@@ -99,15 +99,6 @@ Again, comparing values of different types causes a compiler error:
 ### Comparing Options {#sec:type-classes:comparing-options}
 
 Now for a more interesting example---`Option[Int]`.
-To compare values of type `Option[Int]`
-we need to import instances of `Eq` for `Option` as well as `Int`:
-
-```scala mdoc:silent
-import cats.instances.int._    // for Eq
-import cats.instances.option._ // for Eq
-```
-
-Now we can try some comparisons:
 
 ```scala mdoc:fail
 Some(1) === None
@@ -131,14 +122,11 @@ Option(1) === Option.empty[Int]
 
 or using special syntax from [`cats.syntax.option`][cats.syntax.option]:
 
-```scala mdoc:silent
-import cats.syntax.option._ // for some and none
-```
-
 ```scala mdoc
 1.some === none[Int]
 1.some =!= none[Int]
 ```
+
 
 ### Comparing Custom Types
 
@@ -147,11 +135,8 @@ which accepts a function of type `(A, A) => Boolean` and returns an `Eq[A]`:
 
 ```scala mdoc:silent
 import java.util.Date
-import cats.instances.long._ // for Eq
-```
 
-```scala mdoc:silent
-implicit val dateEq: Eq[Date] =
+given dateEq: Eq[Date] =
   Eq.instance[Date] { (date1, date2) =>
     date1.getTime === date2.getTime
   }
@@ -166,6 +151,7 @@ val y = new Date() // a bit later than now
 x === x
 x === y
 ```
+
 
 ### Exercise: Equality, Liberty, and Felinity
 
@@ -188,12 +174,12 @@ val optionCat2 = Option.empty[Cat]
 <div class="solution">
 First we need our Cats imports.
 In this exercise we'll be using the `Eq` type class
-and the `Eq` interface syntax.
-We'll bring instances of `Eq` into scope as we need them below:
+and the `Eq` interface syntax,
+so we start by importing that.
 
 ```scala mdoc:silent:reset-object
-import cats.Eq
-import cats.syntax.eq._ // for ===
+import cats.*
+import cats.syntax.all.* 
 ```
 
 Our `Cat` class is the same as ever:
@@ -206,10 +192,7 @@ We bring the `Eq` instances for `Int` and `String`
 into scope for the implementation of `Eq[Cat]`:
 
 ```scala mdoc:silent
-import cats.instances.int._    // for Eq
-import cats.instances.string._ // for Eq
-
-implicit val catEqual: Eq[Cat] =
+given catEqual: Eq[Cat] =
   Eq.instance[Cat] { (cat1, cat2) =>
     (cat1.name  === cat2.name ) &&
     (cat1.age   === cat2.age  ) &&
@@ -225,13 +208,7 @@ val cat2 = Cat("Heathcliff", 32, "orange and black")
 
 cat1 === cat2
 cat1 =!= cat2
-```
 
-```scala mdoc:silent
-import cats.instances.option._ // for Eq
-```
-
-```scala mdoc
 val optionCat1 = Option(cat1)
 val optionCat2 = Option.empty[Cat]
 
