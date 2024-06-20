@@ -6,14 +6,13 @@ our first type classes with fancy functional programming names:
  -  a `Semigroup` represents an addition or combination operation;
  -  a `Monoid` extends a `Semigroup` by adding an identity or "zero" element.
 
-We can use `Semigroups` and `Monoids` by importing three things:
-the type classes themselves, the instances for the types we care about,
+We can use `Semigroups` and `Monoids` by importing two things:
+the type classes themselves, 
 and the semigroup syntax to give us the `|+|` operator:
 
 ```scala mdoc:silent
 import cats.Monoid
-import cats.instances.string._ // for Monoid
-import cats.syntax.semigroup._ // for |+|
+import cats.syntax.semigroup.* // for |+|
 ```
 
 ```scala mdoc
@@ -23,18 +22,11 @@ import cats.syntax.semigroup._ // for |+|
 With the correct instances in scope,
 we can set about adding anything we want:
 
-```scala mdoc:silent
-import cats.instances.int._    // for Monoid
-import cats.instances.option._ // for Monoid
-```
-
 ```scala mdoc
 Option(1) |+| Option(2)
 ```
 
 ```scala mdoc:silent
-import cats.instances.map._ // for Monoid
-
 val map1 = Map("a" -> 1, "b" -> 2)
 val map2 = Map("b" -> 3, "d" -> 4)
 ```
@@ -44,9 +36,6 @@ map1 |+| map2
 ```
 
 ```scala mdoc:silent
-import cats.instances.tuple._  // for Monoid
-
-
 val tuple1 = ("hello", 123)
 val tuple2 = ("world", 321)
 ```
@@ -60,7 +49,7 @@ for which we have an instance of `Monoid`:
 
 ```scala mdoc:silent
 def addAll[A](values: List[A])
-      (implicit monoid: Monoid[A]): A =
+      (using monoid: Monoid[A]): A =
   values.foldRight(monoid.empty)(_ |+| _)
 ```
 

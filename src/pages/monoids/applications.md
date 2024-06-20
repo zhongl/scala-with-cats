@@ -6,7 +6,7 @@ These are explored in more detail in case studies later in the book.
 
 ### Big Data
 
-In big data applications like Spark and Hadoop we distribute data analysis over many machines,
+In big data applications like Spark and Flink we distribute data analysis over many machines,
 giving fault tolerance and scalability.
 This means each machine will return results over a portion of the data,
 and we must then combine these results to get our final result.
@@ -39,7 +39,7 @@ so every machine has the same data if no more updates arrive.
 This is called *eventual consistency*.
 
 A particular class of data types support this reconciliation.
-These data types are called commutative replicated data types (CRDTs).
+These data types are called conflict-free replicated data types (CRDTs).
 The key operation is the ability to merge two data instances,
 with a result that captures all the information in both instances.
 This operation relies on having a monoid instance.
@@ -49,4 +49,4 @@ We explore this idea further in the CRDT case study.
 
 The two examples above are cases where monoids inform the entire system architecture.
 There are also many cases where having a monoid around makes it easier to write a small code fragment.
-We'll see lots of examples in the case studies in this book.
+We'll see lots of examples in the remainder of this book.

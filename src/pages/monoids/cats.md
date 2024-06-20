@@ -19,6 +19,12 @@ import cats.Monoid
 import cats.Semigroup
 ```
 
+or just
+
+```scala mdoc:reset:silent
+import cats.*
+```
+
 <div class="callout callout-info">
 *Cats Kernel?*
 
@@ -39,18 +45,18 @@ are part of the main Cats project and
 are defined directly in the [`cats`][cats.package] package.
 </div>
 
+
 ### Monoid Instances {#sec:monoid-instances}
 
 `Monoid` follows the standard Cats pattern for the user interface:
 the companion object has an `apply` method
 that returns the type class instance for a particular type.
 For example, if we want the monoid instance for `String`,
-and we have the correct implicits in scope,
+and we have the correct given instances in scope,
 we can write the following:
 
 ```scala mdoc:silent
 import cats.Monoid
-import cats.instances.string._ // for Monoid
 ```
 
 ```scala mdoc
@@ -76,49 +82,10 @@ import cats.Semigroup
 Semigroup[String].combine("Hi ", "there")
 ```
 
-The type class instances for `Monoid`
-are organised under `cats.instances`
-in the standard way described
-in Chapter [@sec:importing-default-instances].
-For example, if we want to pull in instances for `Int`
-we import from [`cats.instances.int`][cats.instances.int]:
+The standard type class instances for `Monoid`
+are all found on the appropriate companion objects,
+and so are automatically in the given scope with no further imports required.
 
-```scala mdoc:silent
-import cats.Monoid
-import cats.instances.int._ // for Monoid
-```
-
-```scala mdoc
-Monoid[Int].combine(32, 10)
-```
-
-Similarly, we can assemble a `Monoid[Option[Int]]` using
-instances from [`cats.instances.int`][cats.instances.int]
-and [`cats.instances.option`][cats.instances.option]:
-
-```scala mdoc:silent
-import cats.Monoid
-import cats.instances.int._    // for Monoid
-import cats.instances.option._ // for Monoid
-```
-
-```scala mdoc
-val a = Option(22)
-val b = Option(20)
-
-Monoid[Option[Int]].combine(a, b)
-```
-
-Refer back to Chapter [@sec:importing-default-instances]
-for a more comprehensive list of imports.
-
-As always, unless we have a good reason to import individual instances,
-we can just import everything.
-
-```scala
-import cats._
-import cats.implicits._
-```
 
 ### Monoid Syntax {#sec:monoid-syntax}
 
@@ -128,23 +95,24 @@ Because `combine` technically comes from `Semigroup`,
 we access the syntax by importing from [`cats.syntax.semigroup`][cats.syntax.semigroup]:
 
 ```scala mdoc:silent
-import cats.instances.string._ // for Monoid
-import cats.syntax.semigroup._ // for |+|
+import cats.syntax.semigroup.* // for |+|
 ```
 
 ```scala mdoc
 val stringResult = "Hi " |+| "there" |+| Monoid[String].empty
-```
 
-```scala mdoc:silent
-import cats.instances.int._ // for Monoid
-```
-
-```scala mdoc
 val intResult = 1 |+| 2 |+| Monoid[Int].empty
 ```
 
-### Exercise: Adding All The Things
+As always,
+unless there is compelling reason not, we recommend importing all the syntax with
+
+```scala mdoc:silent
+import cats.syntax.all.*
+```
+
+
+#### Exercise: Adding All The Things
 
 The cutting edge *SuperAdder v3.5a-32* is the world's first choice for adding together numbers.
 The main function in the program has signature `def add(items: List[Int]): Int`.
@@ -163,8 +131,7 @@ although there's not a compelling use case for this yet:
 
 ```scala mdoc:silent:reset-object
 import cats.Monoid
-import cats.instances.int._    // for Monoid
-import cats.syntax.semigroup._ // for |+|
+import cats.syntax.all.*
 
 def add(items: List[Int]): Int =
   items.foldLeft(Monoid[Int].empty)(_ |+| _)
@@ -185,9 +152,9 @@ We can write this as a generic method that accepts an implicit `Monoid` as a par
 
 ```scala mdoc:silent:reset-object
 import cats.Monoid
-import cats.syntax.semigroup._ // for |+|
+import cats.syntax.all.*
 
-def add[A](items: List[A])(implicit monoid: Monoid[A]): A =
+def add[A](items: List[A])(using monoid: Monoid[A]): A =
   items.foldLeft(monoid.empty)(_ |+| _)
 ```
 
@@ -195,8 +162,7 @@ We can optionally use Scala's *context bound* syntax to write the same code in a
 
 ```scala mdoc:invisible:reset-object
 import cats.Monoid
-import cats.instances.int._    // for Monoid
-import cats.syntax.semigroup._ // for |+|
+import cats.syntax.all.* 
 ```
 ```scala mdoc:silent
 def add[A: Monoid](items: List[A]): A =
@@ -205,16 +171,8 @@ def add[A: Monoid](items: List[A]): A =
 
 We can use this code to add values of type `Int` and `Option[Int]` as requested:
 
-```scala mdoc:silent
-import cats.instances.int._ // for Monoid
-```
-
 ```scala mdoc
 add(List(1, 2, 3))
-```
-
-```scala mdoc:silent
-import cats.instances.option._ // for Monoid
 ```
 
 ```scala mdoc
@@ -247,7 +205,7 @@ Make it so!
 Easy---we simply define a monoid instance for `Order`!
 
 ```scala mdoc:silent
-implicit val monoid: Monoid[Order] = new Monoid[Order] {
+given monoid: Monoid[Order] with {
   def combine(o1: Order, o2: Order) =
     Order(
       o1.totalCost + o2.totalCost,
