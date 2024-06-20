@@ -13,6 +13,7 @@ Finally, thanks to the following who sponsored my work or contributed with corre
 
 Charles Adetiloye,
 Johanna Odersky,
+Lunfu Zhong,
 Maciej Gorywoda ,
 Mathieu Pichette,
 Murat Cetin ,
