@@ -10,29 +10,22 @@ Published by [Inner Product](https://inner-product.com/).
 
 Portions of Functional Programming Strategies in Scala with Cats are based on Scala with Cats by Dave Pereira-Gurnell and Noel Welsh, which is licensed under CC BY-SA 4.0.
 
+
 ## Overview
 
-[Scala with Cats][scala-with-cats] teaches
-core functional abstractions of monoids, functors, monads, and applicative functors
-using the [Cats](http://typelevel.org/cats) library and a number of case studies.
+[Functional Programming Strategies][website] teaches the core concepts and techniques for building practical software in a functional programming style.
+
 
 ## Building
 
 The build requires a lot of heavy machinery:
 texlive, node, java, scala, and pandoc and pandoc-crossref.
-The simplest way to build it is to use [Docker Compose](http://docker.com)
-with the provided shell scripts, `Dockerfile`, and `docker-compose.yaml`:
+There are all installed as part of the 
+[CI job that builds the book](https://github.com/scalawithcats/scala-with-cats/blob/develop/.github/workflows/publish.yml).
+This is always kept up to date, so refer to it for dependencies and their installation.
 
-- install Docker Compose (`brew install docker-compose` on OS X;
-  or download from [docker.com](http://docker.com/)); and
-
-- run `go.sh` (or `docker-compose run book bash` if `go.sh` doesn't work).
-
-This will open a `bash` shell running inside the Docker container
-that contains all the dependencies to build the book.
-
-From the shell run `sbt` to open an SBT prompt,
-from which you can issue the following commands:
+Once you have the dependencies installed, run `sbt` to open an SBT prompt.
+From within `sbt` you can issue the following commands:
 
 - `pdf` builds a PDF version in `dist/scala-with-cats.pdf`;
 - `html` builds an HTML version in `dist/scala-with-cats.html`;
@@ -50,6 +43,7 @@ There are also `tex` and `json` commands
 that build a LaTeX version of the book and a Pandoc AST respectively.
 These are useful for debugging the build.
 
+
 ## Contributing
 
 If you spot a typo or mistake,
@@ -62,5 +56,4 @@ or you'd like to suggest a larger change
 to the content or structure of the book,
 please raise an issue instead.
 
-[ebook-template]: https://github.com/underscoreio/underscore-ebook-template
-[scala-with-cats]: https://underscore.io/books/scala-with-cats
+[website](https://scalawithcats.com/)
