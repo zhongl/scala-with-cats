@@ -56,4 +56,4 @@ or you'd like to suggest a larger change
 to the content or structure of the book,
 please raise an issue instead.
 
-[website](https://scalawithcats.com/)
+[website]: https://scalawithcats.com/
