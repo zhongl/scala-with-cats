@@ -9,13 +9,12 @@ the *type class*, the *instances*, and the *syntax*.
 The functor type class is [`cats.Functor`][cats.Functor].
 We obtain instances using the standard `Functor.apply`
 method on the companion object.
-As usual, default instances are arranged by type in
-the [`cats.instances`][cats.instances] package:
+As usual, default instances are found on companion objects
+and do not have to be explicity imported:
 
 ```scala mdoc:silent:reset-object
-import cats.Functor
-import cats.instances.list._   // for Functor
-import cats.instances.option._ // for Functor
+import cats.*
+import cats.syntax.all.*
 ```
 
 ```scala mdoc
@@ -60,11 +59,6 @@ Scala's `Function1` type doesn't have a `map` method
 so there are no naming conflicts:
 
 ```scala mdoc:silent
-import cats.instances.function._ // for Functor
-import cats.syntax.functor._     // for map
-```
-
-```scala mdoc:silent
 val func1 = (a: Int) => a + 1
 val func2 = (a: Int) => a * 2
 val func3 = (a: Int) => s"${a}!"
@@ -85,9 +79,6 @@ no matter what functor context it's in:
 def doMath[F[_]](start: F[Int])
     (implicit functor: Functor[F]): F[Int] =
   start.map(n => n + 1 * 2)
-
-import cats.instances.option._ // for Functor
-import cats.instances.list._   // for Functor
 ```
 
 ```scala mdoc
@@ -152,7 +143,7 @@ Here's an example of a `Functor` for `Option`,
 even though such a thing already exists in [`cats.instances`][cats.instances].
 The implementation is trivial---we simply call `Option's` `map` method:
 
-```scala mdoc:silent
+```scala
 implicit val optionFunctor: Functor[Option] =
   new Functor[Option] {
     def map[A, B](value: Option[A])(func: A => B): Option[B] =
@@ -217,8 +208,6 @@ The functor laws intuitively require us to retain the same structure
 with the same pattern of `Branch` and `Leaf` nodes:
 
 ```scala mdoc:silent
-import cats.Functor
-
 implicit val treeFunctor: Functor[Tree] =
   new Functor[Tree] {
     def map[A, B](tree: Tree[A])(func: A => B): Tree[B] =

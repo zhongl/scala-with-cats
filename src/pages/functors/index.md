@@ -4,11 +4,12 @@ In this chapter we will investigate **functors**,
 an abstraction that allows us to
 represent sequences of operations within a context
 such as a `List`, an `Option`,
-or any one of a thousand other possibilities.
+or any one of thousands of other possibilities.
 Functors on their own aren't so useful,
 but special cases of functors, 
 such as **monads** and **applicative functors**,
-are some of the most commonly used abstractions in Cats.
+are some of the most commonly used abstractions.
+
 
 ## Examples of Functors {#sec:functors:examples}
 
@@ -63,6 +64,7 @@ dictated by the relevant data type:
 - `Option`---the value may or may not be present;
 - `Either`---there may be a value or an error;
 - `List`---there may be zero or more values.
+
 
 ## More Examples of Functors {#sec:functors:more-examples}
 
@@ -210,11 +212,8 @@ We also see this in Figure [@fig:functors:function-type-chart]:
 In other words, "mapping" over a `Function1` is function composition:
 
 ```scala mdoc:silent
-import cats.instances.function._ // for Functor
-import cats.syntax.functor._     // for map
-```
+import cats.syntax.all.*     // for map
 
-```scala mdoc:silent
 val func1: Int => Double =
   (x: Int) => x.toDouble
 
@@ -223,9 +222,9 @@ val func2: Double => Double =
 ```
 
 ```scala mdoc
-(func1 map func2)(1)     // composition using map
-(func1 andThen func2)(1) // composition using andThen
-func2(func1(1))          // composition written out by hand
+(func1.map(func2))(1)     // composition using map
+(func1.andThen(func2))(1) // composition using andThen
+func2(func1(1))           // composition written out by hand
 ```
 
 How does this relate to our general pattern
@@ -276,6 +275,7 @@ We'll look at why this happens in detail
 in Section [@sec:functors:partial-unification].
 </div>
 
+
 ## Definition of a Functor
 
 Every example we've looked at so far is a functor:
@@ -296,9 +296,6 @@ Here's a simplified version of the definition:
 
 ```scala
 package cats
-```
-
-```scala mdoc:silent
 
 trait Functor[F[_]] {
   def map[A, B](fa: F[A])(f: A => B): F[B]
