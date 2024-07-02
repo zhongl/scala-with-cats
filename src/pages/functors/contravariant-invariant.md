@@ -55,8 +55,8 @@ trait Display[A] {
     ???
 }
 
-def format[A](value: A)(using p: Display[A]): String =
-  p.format(value)
+def display[A](value: A)(using p: Display[A]): String =
+  p.display(value)
 ```
 
 #### Exercise: Showing off with Contramap
@@ -67,11 +67,11 @@ and replace the `???` with a working method body:
 
 ```scala
 trait Display[A] {
-  def format(value: A): String
+  def display(value: A): String
 
   def contramap[B](func: B => A): Display[B] =
     new Display[B] {
-      def format(value: B): String =
+      def display(value: B): String =
         ???
     }
 }
@@ -94,17 +94,17 @@ the outer and inner `Displays`:
 ```scala mdoc:silent:reset-object
 trait Display[A] { self =>
 
-  def format(value: A): String
+  def display(value: A): String
 
   def contramap[B](func: B => A): Display[B] =
     new Display[B] {
-      def format(value: B): String =
-        self.format(func(value))
+      def display(value: B): String =
+        self.display(func(value))
     }
 }
 
-def format[A](value: A)(using p: Display[A]): String =
-  p.format(value)
+def display[A](value: A)(using p: Display[A]): String =
+  p.display(value)
 ```
 </div>
 
@@ -114,19 +114,19 @@ for `String` and `Boolean`:
 
 ```scala mdoc:silent
 given stringDisplay: Display[String] with {
-  def format(value: String): String =
+  def display(value: String): String =
     s"'${value}'"
 }
 
 given booleanDisplay: Display[Boolean] with {
-  def format(value: Boolean): String =
+  def display(value: Boolean): String =
     if value then "yes" else "no"
 }
 ```
 
 ```scala mdoc
-format("hello")
-format(true)
+display("hello")
+display(true)
 ```
 
 Now define an instance of `Display` for
@@ -152,15 +152,15 @@ given boxDisplay[A](using p: Display[A]): Display[Box[A]] =
 Your instance should work as follows:
 
 ```scala mdoc
-format(Box("hello world"))
-format(Box(true))
+display(Box("hello world"))
+display(Box(true))
 ```
 
 If we don't have a `Display` for the type inside the `Box`,
-calls to `format` should fail to compile:
+calls to `display` should fail to compile:
 
 ```scala mdoc:fail
-format(Box(123))
+display(Box(123))
 ```
 
 <div class="solution">
@@ -172,12 +172,12 @@ We can either write out the complete definition by hand:
 trait Display[A] {
   self =>
 
-  def format(value: A): String
+  def display(value: A): String
 
   def contramap[B](func: B => A): Display[B] =
     new Display[B] {
-      def format(value: B): String =
-        self.format(func(value))
+      def display(value: B): String =
+        self.display(func(value))
     }
 }
 final case class Box[A](value: A)
@@ -186,8 +186,8 @@ final case class Box[A](value: A)
 given boxDisplay[A](
     using p: Display[A]
 ): Display[Box[A]] with {
-  def format(box: Box[A]): String =
-    p.format(box.value)
+  def display(box: Box[A]): String =
+    p.display(box.value)
 }
 ```
 
@@ -198,27 +198,27 @@ on the using clause:
 trait Display[A] {
   self =>
 
-  def format(value: A): String
+  def display(value: A): String
 
   def contramap[B](func: B => A): Display[B] =
     new Display[B] {
-      def format(value: B): String =
-        self.format(func(value))
+      def display(value: B): String =
+        self.display(func(value))
     }
 }
 
-def format[A](value: A)(implicit p: Display[A]): String =
-  p.format(value)
+def display[A](value: A)(implicit p: Display[A]): String =
+  p.display(value)
 
 given stringDisplay: Display[String] =
   new Display[String] {
-    def format(value: String): String =
+    def display(value: String): String =
       s"'${value}'"
   }
 
 given booleanDisplay: Display[Boolean] =
   new Display[Boolean] {
-    def format(value: Boolean): String =
+    def display(value: Boolean): String =
       if(value) "yes" else "no"
   }
 final case class Box[A](value: A)
