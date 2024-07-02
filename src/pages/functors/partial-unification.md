@@ -4,9 +4,8 @@ In Section [@sec:functors:more-examples]
 we saw a functor instance for `Function1`.
 
 ```scala mdoc:silent
-import cats.Functor
-import cats.instances.function._ // for Functor
-import cats.syntax.functor._     // for map
+import cats.*
+import cats.syntax.functor.*     // for map
 
 val func1 = (x: Int)    => x.toDouble
 val func2 = (y: Double) => y * 2
@@ -123,7 +122,7 @@ If we try this for real, however,
 our code won't compile:
 
 ```scala mdoc:silent
-import cats.syntax.contravariant._ // for contramap
+import cats.syntax.contravariant.* // for contramap
 ```
 
 ```scala mdoc:fail

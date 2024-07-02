@@ -102,6 +102,7 @@
 [link-catalysts]: https://github.com/typelevel/catalysts
 [link-cats]: http://typelevel.org/cats
 [link-cats-infographic]: https://github.com/tpolecat/cats-infographic
+[link-circe-codec]: https://github.com/circe/circe/blob/series/0.14.x/modules/core/shared/src/main/scala/io/circe/Codec.scala
 [link-crdt-survey]: https://hal.inria.fr/inria-00609399v2/document
 [link-don-stewart-so]: http://stackoverflow.com/questions/27852709/enterprise-patterns-with-functional-programming/27860072#27860072
 [link-don-stewart]: https://donsbot.wordpress.com
@@ -117,7 +118,7 @@
 [link-map-reduce]: http://research.google.com/archive/map-reduce.html
 [link-mdoc]: https://github.com/scalameta/mdoc
 [link-monads-burritos]: http://blog.plover.com/prog/burritos.html
-[link-monocle]: http://julien-truffaut.github.io/Monocle/
+[link-monocle]: https://github.com/optics-dev/Monocle
 [link-parallel-collections]: http://docs.scala-lang.org/overviews/parallel-collections/overview.html
 [link-phil-freeman-tailrecm]: http://functorial.com/stack-safety-for-free/index.pdf
 [link-play-json-format]: https://www.playframework.com/documentation/2.6.x/ScalaJsonCombinators#Format
@@ -135,7 +136,7 @@
 [link-so-tree-tailrecm]: https://stackoverflow.com/questions/44504790/cats-non-tail-recursive-tailrecm-method-for-monads
 [link-stochastic-gradient-descent]: http://en.wikipedia.org/wiki/Stochastic_gradient_descent
 [link-summingbird]: https://github.com/twitter/summingbird
-[link-symbol]: http://www.scala-lang.org/api/2.12.1/scala/Symbol.html
+[link-symbol]: https://www.scala-lang.org/api/3.3.3/scala/Symbol.html#
 [link-topk]: http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.114.9563
 [link-typelevel-scala]: https://github.com/typelevel/scala
 [link-value-classes]: http://docs.scala-lang.org/overviews/core/value-classes.html
